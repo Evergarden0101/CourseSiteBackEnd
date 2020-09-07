@@ -7,25 +7,23 @@ type User struct {
 	Id string `json:"id"`
 	UserName string  `json:"userName"`
 	Password string  `json:"password"`
+	Phone string `json:"phone"`
 	Email string `json:"email"`
 	UserType string  `json:"userType"`
-}
-
-type Service struct {
-	Id string `json:"id"`
-	Detail string `json:"detail"`
-}
-
-type Relation struct {
-	UserId string `json:"userId"`
-	ServiceId string `json:"serviceId"`
-	Type int `json:"type"`
 }
 
 type Apply struct {
 	Id string `json:"id"`
 	UserId string `json:"userId"`
-	ServiceId string `json:"serviceId"`
+	Title string `json:"title"`
+	Message string `json:"message"`
 	Type int `json:"type"`
 	Status string `json:"status"`
+}
+
+type Topic struct {
+	Id string `json:"id"`
+	Title string `json:"title"`
+	CourseId string `json:"courseId"`
+	Detail string `json:"detail"`
 }

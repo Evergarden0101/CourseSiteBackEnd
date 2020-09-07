@@ -16,7 +16,8 @@ type JWT struct {
 type CustomClaims struct {
 	Id string `json:"id"`
 	UserName string  `json:"userName"`
-	Password string  `json:"password"`
+	Phone string `json:"phone"`
+	Email string `json:"email"`
 	UserType string  `json:"userType"`
 	jwt.StandardClaims
 }
