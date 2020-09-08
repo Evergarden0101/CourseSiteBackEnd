@@ -3,26 +3,31 @@ package util
 import (
 	"awesomeProject/main/dao"
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
+	"strconv"
 )
+type increment struct {
+	Name   string `json:"name"`
+	Number int    `json:"number"`
+}
+func GetIncrementId(name string)(string){
 
-func GetIncrementId(name string)(int){
+	collection := dao.GetDataBase().Collection("incrementId")
+	var incre increment
+	d := bson.D{{
+		"name",name,
+	}}
 
-	collection := dao.GetDataBase().Collection(name)
-	findOptions := options.Find()
-	cur, err := collection.Find(context.TODO(), bson.D{{}}, findOptions)
-	if err != nil {
-		log.Fatal(err)
+	val := collection.FindOne(context.TODO(),d)
+	val.Decode(&incre)
+
+	filter := bson.D{{"name", name}}
+	update := bson.D{
+		{"$set", bson.D{
+			{"number", incre.Number +1},
+		}},
 	}
-	id := 0
-	for cur.Next(context.TODO()) {
-		id++
-	}
-	cur.Close(context.TODO())
-	fmt.Println(id)
-	return id
+	collection.UpdateOne(context.TODO(), filter, update)
+	return strconv.Itoa(incre.Number)
 
 }

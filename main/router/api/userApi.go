@@ -56,14 +56,10 @@ func Login(c *gin.Context){
 	}
 }
 
-func GetUser(c *gin.Context){
+func GetUser(c *gin.Context)(string){
 	claim,_ := c.Get("claims")
-	claim = claim.(*domain.CustomClaims)
-	c.JSON(http.StatusOK, gin.H{
-		"code": constant.SUCCESS,
-		"msg":  constant.REGISTER_SUCCESS,
-		"data": claim,
-	})
+	user := claim.(*domain.CustomClaims)
+	return user.Id
 }
 //修改邮箱，密码，手机号等个人信息
 func ModifyInfo(c *gin.Context){
