@@ -33,7 +33,7 @@ func Run(){
 
 	r.POST("/api/register",api.Register)
 	r.POST("/api/login",api.Login)
-	r.GET("/api/getUser",util.JWTAuth(),api.GetUser)
+	//r.GET("/api/getUser",util.JWTAuth(),util.GetUser)
 	r.GET("/ping",func(c *gin.Context) {
 		str := make([]string,1)
 		str[0] = "2541601705@qq.com"

@@ -25,6 +25,12 @@ type JWT struct {
 	SigningKey []byte
 }
 
+func GetUser(c *gin.Context)(string){
+	claim,_ := c.Get("claims")
+	user := claim.(*domain.CustomClaims)
+	return user.Id
+}
+
 // JWTAuth 中间件，检查token
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {

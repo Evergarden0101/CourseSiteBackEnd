@@ -25,13 +25,20 @@ func Register(c *gin.Context) {
 	}
 
 	if (dao.CheckId(user.Id) && dao.CheckEmail(user.Email)) {
+		user.Password = util.Encode(user.Password)
 		dao.InsertUser(&user)
 		c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
-		"msg":  constant.REGISTER_SUCCESS,
+		"msg":  "注册成功",
 		"data": "",
 		})
-    }
+    }else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "学号或邮箱重复",
+			"data": "",
+		})
+	}
 }
 
 //登录
@@ -45,22 +52,26 @@ func Login(c *gin.Context){
 	var json jsonData
 	error := c.BindJSON(&json)
 	fmt.Println(json)
-
 	if error != nil {
 		log.Println(error)
 	}
 
 	user := dao.GetUserById(json.Id)
-	if(user.Password == json.Password) {
+	json.Password = util.Encode(json.Password)
+	if(user!=nil&&user.Password == json.Password) {
 		generateToken(c,*user)
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "学号和密码不匹配",
+			"data": "",
+		})
+
 	}
 }
 
-func GetUser(c *gin.Context)(string){
-	claim,_ := c.Get("claims")
-	user := claim.(*domain.CustomClaims)
-	return user.Id
-}
+
+
 //修改邮箱，密码，手机号等个人信息
 func ModifyInfo(c *gin.Context){
 
@@ -80,14 +91,14 @@ func ModifyInfo(c *gin.Context){
 		dao.UpdateUser(oldUser)
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
-			"msg":  constant.REGISTER_SUCCESS,
-			"data": "修改个人信息成功",
+			"msg":  "修改个人信息成功",
+			"data": "",
 		})
 	}else {
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
-			"msg":  constant.REGISTER_SUCCESS,
-			"data": "修改失败",
+			"code": constant.ERROR,
+			"msg":  "修改失败",
+			"data": "",
 		})
 	}
 
@@ -114,17 +125,21 @@ func FindPassword(c *gin.Context){
 	if user !=nil && user.Email == json.Email{
 		str := make([]string,1)
 		str[0] = user.Email
+
+		user.Password = util.Encode(user.Password)
+		dao.UpdateUser(user)
+
 		util.SendMail(str,"重置密码邮件","重制后的密码为:123456a")
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
-			"msg":  constant.REGISTER_SUCCESS,
-			"data": "密码已发送到邮箱",
+			"msg":  "密码已发送到邮箱",
+			"data": "",
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.ERROR,
-			"msg":  constant.ERROR,
-			"data": "学号和邮箱不匹配",
+			"msg":  "学号和邮箱不匹配",
+			"data": "",
 		})
 	}
 
@@ -166,8 +181,8 @@ func generateToken(c *gin.Context, user domain.User) {
 		Token: token,
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status": 0,
-		"msg":    "登录成功！",
+		"code": constant.SUCCESS,
+		"msg":    "登录成功",
 		"data":   data,
 	})
 	return
