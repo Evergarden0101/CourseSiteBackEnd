@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 )
@@ -76,4 +77,21 @@ func CheckEmail(email string) bool{
 func InsertUser(user *domain.User) {
 	collection := dataBase.Collection("user")
 	collection.InsertOne(context.TODO(),user)
+}
+
+func UpdateUser(user *domain.User){
+	collection := dataBase.Collection("user")
+	filter := bson.D{{"id", user.Id}}
+	update := bson.D{
+		{"$set", bson.D{
+			{"email", user.Email},
+			{"password",user.Password},
+			{"phone",user.Phone},
+		}},
+	}
+	updateResult, err := collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(updateResult)
 }

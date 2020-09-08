@@ -38,7 +38,7 @@ func Register(c *gin.Context) {
 func Login(c *gin.Context){
 
 	type jsonData struct{
-		Email string `json:"email"`
+		Id string `json:"id"`
 		Password string  `json:"password"`
 	}
 
@@ -50,7 +50,7 @@ func Login(c *gin.Context){
 		log.Println(error)
 	}
 
-	user := dao.GetUserByEmail(json.Email)
+	user := dao.GetUserById(json.Id)
 	if(user.Password == json.Password) {
 		generateToken(c,*user)
 	}
@@ -64,6 +64,74 @@ func GetUser(c *gin.Context){
 		"msg":  constant.REGISTER_SUCCESS,
 		"data": claim,
 	})
+}
+//修改邮箱，密码，手机号等个人信息
+func ModifyInfo(c *gin.Context){
+
+	var user domain.User
+	error := c.BindJSON(&user)
+
+	if error != nil {
+		log.Println(error)
+	}
+	oldUser := dao.GetUserById(user.Id)
+	if oldUser != nil{
+		oldUser.Email = user.Email
+		oldUser.Phone = user.Phone
+		if oldUser.Password != user.Password{
+			oldUser.Password = util.Encode(user.Password)
+		}
+		dao.UpdateUser(oldUser)
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  constant.REGISTER_SUCCESS,
+			"data": "修改个人信息成功",
+		})
+	}else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  constant.REGISTER_SUCCESS,
+			"data": "修改失败",
+		})
+	}
+
+
+}
+
+
+//找回密码
+func FindPassword(c *gin.Context){
+
+	type jsonData struct{
+		Id string `json:"id"`
+		Email string  `json:"email"`
+	}
+
+	var json jsonData
+	error := c.BindJSON(&json)
+	fmt.Println(json)
+
+	if error != nil {
+		log.Println(error)
+	}
+	user := dao.GetUserById(json.Id)
+	if user !=nil && user.Email == json.Email{
+		str := make([]string,1)
+		str[0] = user.Email
+		util.SendMail(str,"重置密码邮件","重制后的密码为:123456a")
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  constant.REGISTER_SUCCESS,
+			"data": "密码已发送到邮箱",
+		})
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  constant.ERROR,
+			"data": "学号和邮箱不匹配",
+		})
+	}
+
 }
 
 func generateToken(c *gin.Context, user domain.User) {
