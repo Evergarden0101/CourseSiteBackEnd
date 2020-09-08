@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	_ "go.mongodb.org/mongo-driver/mongo"
 	"log"
 )
 import "awesomeProject/main/domain"
@@ -77,3 +78,4 @@ func InsertUser(user *domain.User) {
 	collection := dataBase.Collection("user")
 	collection.InsertOne(context.TODO(),user)
 }
+
