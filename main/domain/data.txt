@@ -1,0 +1,11 @@
+Id:123456
+Title:chinese
+CourseId:123456
+Detail:nothing
+Rule:nothing
+
+Id:123457
+Title:chinglish
+CourseId:123457
+Detail:nothing
+Rule:nothing
