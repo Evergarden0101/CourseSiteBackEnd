@@ -1,7 +1,6 @@
 package main
 
 import (
-	"awesomeProject/main/router"
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/newrelic/go-agent"
 )
@@ -14,6 +13,10 @@ type Student struct {
 
 func main() {
 	dao.InitDB()
-    router.Run()
+    //router.Run()
+
+	dao.UpdatePostDetailById("1","6666666")
+    dao.UpdatePostIsEliteById("1",true)
+    dao.UpdatePostTitleById("1","amazing")
 }
 
