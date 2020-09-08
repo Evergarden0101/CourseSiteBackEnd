@@ -73,6 +73,7 @@ func generateToken(c *gin.Context, user domain.User) {
 	claims := domain.CustomClaims{
 		user.Id,
 		user.UserName,
+		user.Phone,
 		user.Password,
 		user.UserType,
 		jwtgo.StandardClaims{
