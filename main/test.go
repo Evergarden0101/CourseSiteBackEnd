@@ -1,6 +1,8 @@
 package main
 
 import (
+	"awesomeProject/main/util"
+	"fmt"
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/newrelic/go-agent"
 )
@@ -12,11 +14,11 @@ type Student struct {
 }
 
 func main() {
+
+
 	dao.InitDB()
+	fmt.Println(util.GetIncrementId("user"))
     //router.Run()
 
-	dao.UpdatePostDetailById("1","6666666")
-    dao.UpdatePostIsEliteById("1",true)
-    dao.UpdatePostTitleById("1","amazing")
 }
 
