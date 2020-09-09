@@ -34,6 +34,8 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
+	r.POST("/api/createcourse",api.CreateCourse)
+	r.POST("/api/includestudents",api.IncludeStudents)
 	//r.GET("/api/getUser",util.JWTAuth(),util.GetUser)
 	//r.GET("/ping",func(c *gin.Context) {
 	//	str := make([]string,1)
