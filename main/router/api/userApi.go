@@ -127,7 +127,7 @@ func FindPassword(c *gin.Context){
 		str := make([]string,1)
 		str[0] = user.Email
 
-		user.Password = util.Encode(user.Password)
+		user.Password = util.Encode("123456a")
 		dao.UpdateUser(user)
 
 		util.SendMail(str,"重置密码邮件","重制后的密码为:123456a")
