@@ -26,6 +26,7 @@ func Register(c *gin.Context) {
 
 	if (dao.CheckId(user.Id) && dao.CheckEmail(user.Email)) {
 		user.Password = util.Encode(user.Password)
+
 		dao.InsertUser(&user)
 		c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,

@@ -7,9 +7,15 @@ const (
 	MAIL_PORT = "465"
 )
 
-
+//用户类型
 const (
-	READ = 1
-	WRITE = 2
-	REVIEW = 3
+	ADMIN = 0 //管理员
+	STUDENT = 1 //学生
+	TEACHER = 2 //教师
+)
+
+//学生课程/圈子关系类型
+const (
+	STU = 0 //学生
+	ASS = 1 //助教
 )

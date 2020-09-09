@@ -1,8 +1,7 @@
 package main
 
 import (
-	"awesomeProject/main/util"
-	"fmt"
+	"awesomeProject/main/router"
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/newrelic/go-agent"
 )
@@ -17,8 +16,8 @@ func main() {
 
 
 	dao.InitDB()
-	fmt.Println(util.GetIncrementId("user"))
-    //router.Run()
+	//fmt.Println(util.GetIncrementId("user"))
+    router.Run()
 
 }
 
