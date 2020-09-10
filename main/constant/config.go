@@ -19,3 +19,14 @@ const (
 	STU = "student" //学生
 	ASS = "assistant" //助教
 )
+
+const(
+	TEACHER_JOIN = "TEACHER_JOIN"
+	COURSE_JOIN = "COURSE_JOIN"
+)
+
+const(
+	NONE = "none"
+	AGREE = "AGREE"
+	DISAGREE = "DISAGREE"
+)
