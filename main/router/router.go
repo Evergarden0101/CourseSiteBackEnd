@@ -58,19 +58,6 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
-<<<<<<< HEAD
-	r.POST("/api/createpost",api.CreatePost)
-	r.POST("/api/deletepost",api.DeletePost)
-	//r.GET("/api/getUser",util.JWTAuth(),util.GetUser)
-	//r.GET("/ping",func(c *gin.Context) {
-	//	str := make([]string,1)
-	//	str[0] = "2541601705@qq.com"
-	//	util.SendMail(str,"1234","1234")
-	//	c.JSON(200, gin.H{
-	//		"message": "pong",
-	//	})
-	//})
-=======
 
 	r.GET("/test",ServeHTTP)
 
@@ -78,7 +65,6 @@ func Run(){
 	r.POST("/api/includestudents",api.IncludeStudents)
 
 
->>>>>>> master
 	r.Run() // listen and serve on 0.0.0.0:8080
 
 }
