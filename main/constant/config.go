@@ -9,13 +9,24 @@ const (
 
 //用户类型
 const (
-	ADMIN = 0 //管理员
-	STUDENT = 1 //学生
-	TEACHER = 2 //教师
+	ADMIN = "admin" //管理员
+	STUDENT = "student" //学生
+	TEACHER = "teacher" //教师
 )
 
 //学生课程/圈子关系类型
 const (
-	STU = 0 //学生
-	ASS = 1 //助教
+	STU = "student" //学生
+	ASS = "assistant" //助教
+)
+
+const(
+	TEACHER_JOIN = "TEACHER_JOIN"
+	COURSE_JOIN = "COURSE_JOIN"
+)
+
+const(
+	NONE = "none"
+	AGREE = "AGREE"
+	DISAGREE = "DISAGREE"
 )

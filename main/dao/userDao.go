@@ -75,7 +75,6 @@ func CheckEmail(email string) bool{
 }
 
 func InsertUser(user *domain.User) {
-	user.Id = GetIncrementId("user")
 	collection := dataBase.Collection("user")
 	collection.InsertOne(context.TODO(),user)
 }

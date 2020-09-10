@@ -56,6 +56,7 @@ type Topic struct {
 	CourseId string `json:"courseid"`
 	Detail string `json:"detail"`
 	Rule string `json:"rule"`
+	TeacherId string `json:"teacherid"`
 }
 
 type StudentTopicRelation struct {

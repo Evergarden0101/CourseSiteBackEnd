@@ -37,7 +37,7 @@ type increment struct {
 }
 func GetIncrementId(name string)(string){
 
-	collection := GetDataBase().Collection("incrementId")
+	collection := GetDataBase().Collection("incrementid")
 	var incre increment
 	d := bson.D{{
 		"name",name,
