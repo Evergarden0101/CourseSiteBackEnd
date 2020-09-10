@@ -48,14 +48,18 @@ func Run(){
 
 	r := gin.Default()
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
+
 	r.POST("/api/getcomments",api.GetComments)
     r.POST("/api/addcomment",api.AddComment)
+	r.POST("/api/deletecomment",api.DeleteComment)
+
 	r.POST("/api/register",api.Register)
 	r.POST("/api/login",api.Login)
-	r.OPTIONS("/api/login",Options)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
+
 	r.GET("/test",ServeHTTP)
+
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
 

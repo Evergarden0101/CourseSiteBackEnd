@@ -9,7 +9,7 @@ import (
 //增
 //只插入一条
 func AddOneSCRelation(r *domain.StudentCourseRelation){
-	collection := dataBase.Collection("StudentCourseRelation")
+	collection := dataBase.Collection("studentcourserelation")
 	collection.InsertOne(context.TODO(),r)
 }
 
@@ -109,7 +109,7 @@ func AddOneSCRelation(r *domain.StudentCourseRelation){
 //
 //查
 func GetSCRById(cid string,sid string) (*domain.StudentCourseRelation){
-	collection := dataBase.Collection("collection")
+	collection := dataBase.Collection("studentcourserelation")
 	var scr domain.StudentCourseRelation
 	d := bson.M{
 		"studentid":sid,

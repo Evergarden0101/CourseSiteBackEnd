@@ -57,19 +57,13 @@ func IncludeStudents(c *gin.Context){
 				scr.CourseId=json.Cid
 				scr.StudentId=json.Sid
 				dao.AddOneSCRelation(&scr)
-				c.JSON(http.StatusOK,gin.H{
-					"code":constant.SUCCESS,
-					"msg":"加入学生成功",
-					"data":"",
-				})
-			}else{
-				c.JSON(http.StatusOK,gin.H{
-					"code":constant.ERROR,
-					"msg":"该学生已加入该课程，请勿重复加入，该学生学号为"+sids[i],
-					"data":"",
-				})
 			}
 		}
 	}
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"加入学生成功",
+		"data":"",
+	})
 }
 
