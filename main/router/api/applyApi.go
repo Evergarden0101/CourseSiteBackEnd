@@ -24,6 +24,31 @@ func AddApply(c *gin.Context){
 	})
 }
 
+func DeleteApply(c *gin.Context){
+	type jsonData struct {
+		applyId string
+	}
+
+
+	var json jsonData
+	apply := dao.GetApplyById(json.applyId)
+	if apply.UserId == "" {
+		dao.DeleteApplyById(apply.Id)
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  "撤销成功",
+			"data": "",
+		})
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  "没有权限",
+			"data": "",
+		})
+	}
+
+}
+
 func GetApplyByTeacher(c *gin.Context){
 
 	list := dao.GetApplysByType(constant.TEACHER_JOIN)

@@ -73,3 +73,14 @@ func InsertApply(apply *domain.Apply){
 	}
 }
 
+func DeleteApplyById(id string) bool  {
+	collction :=dataBase.Collection("apply")
+	_, err :=collction.DeleteOne(context.TODO(),bson.D{{"id",id}})
+
+	if  err!=nil{
+		return false
+	} else {
+		return true
+	}
+}
+
