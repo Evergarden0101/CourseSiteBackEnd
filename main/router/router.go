@@ -2,6 +2,7 @@ package router
 
 import (
 	"awesomeProject/main/router/api"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	newrelic "github.com/newrelic/go-agent"
 	"log"
@@ -29,11 +30,12 @@ func NewrelicMiddleware(appName string, key string) gin.HandlerFunc {
 	}
 }
 func ServeHTTP(c *gin.Context) {
-	video, err := os.Open("data1.txt")
+	video, err := os.Open("3.mp4")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer video.Close()
+	defer fmt.Println("sss")
 	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
 //func Options(w *gin.Context) {
@@ -57,7 +59,7 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
-
+	r.POST("/api/fileupload",api.FileUpload)
 	r.GET("/test",ServeHTTP)
 
 	r.POST("/api/createcourse",api.CreateCourse)
