@@ -12,12 +12,12 @@ import _ "awesomeProject/main/domain"
 
 //增
 	//只插入一条
-func AddOneData(s *domain.Topic){
+func AddOneTopic(s *domain.Topic){
 	collection := dataBase.Collection("topic")
 	collection.InsertOne(context.TODO(),s)
 }
 	//批量插入
-func AddManyData(datas []interface{}){
+func AddManyTopics(datas []interface{}){
 	collection := dataBase.Collection("topic")
 	insertManyResult,err := collection.InsertMany(context.TODO(),datas)
 	if err!=nil{

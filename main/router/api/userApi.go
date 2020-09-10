@@ -26,7 +26,7 @@ func Register(c *gin.Context) {
 
 	if (dao.CheckId(user.Id) && dao.CheckEmail(user.Email)) {
 		user.Password = util.Encode(user.Password)
-
+		user.UserType = constant.STUDENT
 		dao.InsertUser(&user)
 		c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
@@ -127,7 +127,7 @@ func FindPassword(c *gin.Context){
 		str := make([]string,1)
 		str[0] = user.Email
 
-		user.Password = util.Encode(user.Password)
+		user.Password = util.Encode("123456a")
 		dao.UpdateUser(user)
 
 		util.SendMail(str,"重置密码邮件","重制后的密码为:123456a")

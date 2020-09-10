@@ -11,3 +11,4 @@ func Encode(data string) string {
 	coder := base64.NewEncoding(BASE64Table)
 	return coder.EncodeToString(content)
 }
+
