@@ -3,13 +3,15 @@ package dao
 import (
 	"awesomeProject/main/domain"
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 
-func InserCourse(course *domain.Course) {
+func InsertCourse(course *domain.Course) {
 	collection := dataBase.Collection("course")
-	collection.InsertOne(context.TODO(),course)
+	_,err := collection.InsertOne(context.TODO(),course)
+	fmt.Println(err)
 }
 
 

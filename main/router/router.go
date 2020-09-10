@@ -57,6 +57,7 @@ func Run(){
 	r.POST("/api/findpasswd",api.FindPassword)
 	r.GET("/test",ServeHTTP)
 
+>>>>>>> main/router/router.go
 	r.Run() // listen and serve on 0.0.0.0:8080
 
 }
