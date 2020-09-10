@@ -56,8 +56,10 @@ func Run(){
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
 	r.GET("/test",ServeHTTP)
+	r.POST("/api/createcourse",api.CreateCourse)
+	r.POST("/api/includestudents",api.IncludeStudents)
 
->>>>>>> main/router/router.go
+
 	r.Run() // listen and serve on 0.0.0.0:8080
 
 }
