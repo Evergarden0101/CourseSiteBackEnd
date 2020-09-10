@@ -16,7 +16,7 @@ func InsertComment(comment *domain.Comment){
 func GetComment(commentId string)(*domain.Comment){
 	collection := dataBase.Collection("comment")
 	var comment domain.Comment
-	collection.FindOne(context.TODO(),bson.D{{"Id",commentId}}).Decode(&comment)
+	collection.FindOne(context.TODO(),bson.D{{"id",commentId}}).Decode(&comment)
 	return &comment
 }
 
@@ -25,7 +25,7 @@ func GetCommentsByPostId(postId string)[]*domain.Comment{
 	findOptions := options.Find()
 	var results []*domain.Comment
 
-	cur, err := collection.Find(context.TODO(), bson.D{{"PostId",postId}}, findOptions)
+	cur, err := collection.Find(context.TODO(), bson.D{{"postid",postId}}, findOptions)
 	if err != nil {
 		log.Fatal(err)
 	}

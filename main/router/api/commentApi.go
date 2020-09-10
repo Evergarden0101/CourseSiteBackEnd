@@ -16,6 +16,7 @@ func AddComment(c *gin.Context){
 	if err !=nil{
 		fmt.Println(err)
 	}
+	comment.Id = dao.GetIncrementId("comment")
 	comment.Time = time.Now()
 	dao.InsertComment(&comment)
 	c.JSON(http.StatusOK, gin.H{
