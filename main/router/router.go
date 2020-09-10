@@ -62,6 +62,7 @@ func Run(){
 
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
+	r.POST("/api/deletestudents",api.DeleteStudent)
 
 
 	r.Run() // listen and serve on 0.0.0.0:8080
