@@ -19,17 +19,6 @@ func GetPostById(id string) (*domain.Post)  {
 	return &post
 }
 
-func GetPostByUserId(userId string) (*domain.Post)  {
-	collection := dataBase.Collection("post")
-	var post domain.Post
-
-	d := bson.D{{
-		"userId",userId,
-	}}
-
-	collection.FindOne(context.TODO(),d).Decode(&post)
-	return &post
-}
 
 func GetPostByTitle(title string) []*domain.Post {
 	collection := dataBase.Collection("post")
@@ -42,18 +31,29 @@ func GetPostByTitle(title string) []*domain.Post {
 	log.Println(err)
 	return postList
 }
-func DropPostById (id string) bool  {
+func GetPostByUserId(userId string) []*domain.Post {
+	collection := dataBase.Collection("post")
+	var postList []*domain.Post
+	d := bson.D{{
+		"userid",userId,
+	}}
+	cur,err := collection.Find(context.Background(),d)
+	cur.All(context.Background(),&postList)
+	log.Println(err)
+	return postList
+}
+
+func DropPostById (id string) bool {
 	collection := dataBase.Collection("post")
 	d := bson.D{{
-		"id",id,
+		"id", id,
 	}}
-	_,err:=collection.DeleteOne(context.TODO(), d)
-	if(err!=nil){
+	_, err := collection.DeleteOne(context.TODO(), d)
+	if (err != nil) {
 		return false
 	}
 	return true
 }
-
 func UpdatePostDetailById(id string,detail string)bool  {
 	collection := dataBase.Collection("post")
 	filter := bson.D{{

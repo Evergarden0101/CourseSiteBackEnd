@@ -45,6 +45,7 @@ func GetIncrementId(name string)(string){
 
 	val := collection.FindOne(context.TODO(),d)
 	val.Decode(&incre)
+	
 
 	filter := bson.D{{"name", name}}
 	update := bson.D{
