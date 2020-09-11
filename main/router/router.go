@@ -60,7 +60,29 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
-	r.POST("/api/fileupload",api.FileUpload)
+<<<<<<< main/router/router.go
+
+	r.POST("/api/createpost",api.CreatePost)
+	r.POST("/api/deletepost",api.DeletePost)
+	r.POST("/api/findpostbyuser",api.FindPostByUser)
+	r.POST("/api/findpostbycourse",api.FindPostByCourse)
+	r.POST("/api/findpostbyid",api.FindPostById)
+	r.POST("/api/findpostbytitle",api.FindPostByTitle)
+	r.POST("/api/changepostistop",api.ChangePostIstop)
+	r.POST("/api/changepostiselite",api.ChangePostIselite)
+	//r.GET("/api/getUser",util.JWTAuth(),util.GetUser
+	//r.GET("/ping",func(c *gin.Context) {
+	//	str := make([]string,1)
+	//	str[0] = "2541601705@qq.com"
+	//	util.SendMail(str,"1234","1234")
+	//	c.JSON(200, gin.H{
+	//		"message": "pong",
+	//	})
+	//})
+    r.POST("/api/fileupload",api.FileUpload)
+
+=======
+>>>>>>> main/router/router.go
 	r.GET("/test",ServeHTTP)
 
 	r.POST("/api/createcourse",api.CreateCourse)

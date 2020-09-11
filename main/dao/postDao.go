@@ -43,6 +43,18 @@ func GetPostByUserId(userId string) []*domain.Post {
 	return postList
 }
 
+func GetPostByCourseId(courseId string) []*domain.Post {
+	collection := dataBase.Collection("post")
+	var postList []*domain.Post
+	d := bson.D{{
+		"courseid",courseId,
+	}}
+	cur,err := collection.Find(context.Background(),d)
+	cur.All(context.Background(),&postList)
+	log.Println(err)
+	return postList
+}
+
 func DropPostById (id string) bool {
 	collection := dataBase.Collection("post")
 	d := bson.D{{
@@ -88,11 +100,12 @@ func UpdatePostTitleById(id string,title string)bool  {
 	return true
 }
 
-func UpdatePostIsTopById(id string,istop bool)bool  {
+func UpdatePostIsTopById(id string)bool  {
 	collection := dataBase.Collection("post")
 	filter := bson.D{{
 		"id",id,
 	}}
+	istop:=!(GetPostById(id).IsTop)
 	update := bson.D{
 		{"$set",bson.D{
 			{"istop",istop},
@@ -105,11 +118,12 @@ func UpdatePostIsTopById(id string,istop bool)bool  {
 	return true
 }
 
-func UpdatePostIsEliteById(id string,iselite bool)bool  {
+func UpdatePostIsEliteById(id string)bool  {
 	collection := dataBase.Collection("post")
 	filter := bson.D{{
 		"id",id,
 	}}
+	iselite:=!(GetPostById(id).IsElite)
 	update := bson.D{
 		{"$set",bson.D{
 			{"iselite",iselite},
