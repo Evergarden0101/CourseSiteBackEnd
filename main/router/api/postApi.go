@@ -181,7 +181,7 @@ func ChangePostIstop(c *gin.Context) {
 	if error != nil {
 		log.Println(error)
 	}
-	if(dao.GetCourseById(dao.GetPostById(postid.Id).CourseId).TearchId!=userid){
+	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "无操作权限",
@@ -218,7 +218,7 @@ func ChangePostIselite(c *gin.Context) {
 	if error != nil {
 		log.Println(error)
 	}
-	if(dao.GetCourseById(dao.GetPostById(postid.Id).CourseId).TearchId!=userid){
+	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "无操作权限",

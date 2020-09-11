@@ -69,18 +69,8 @@ func Run(){
 	r.POST("/api/findpostbytitle",api.FindPostByTitle)
 	r.POST("/api/changepostistop",api.ChangePostIstop)
 	r.POST("/api/changepostiselite",api.ChangePostIselite)
-	//r.GET("/api/getUser",util.JWTAuth(),util.GetUser
-	//r.GET("/ping",func(c *gin.Context) {
-	//	str := make([]string,1)
-	//	str[0] = "2541601705@qq.com"
-	//	util.SendMail(str,"1234","1234")
-	//	c.JSON(200, gin.H{
-	//		"message": "pong",
-	//	})
-	//})
     r.POST("/api/fileupload",api.FileUpload)
 	r.GET("/test",ServeHTTP)
-
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
 	r.POST("/api/deletestudents",api.DeleteStudent)
