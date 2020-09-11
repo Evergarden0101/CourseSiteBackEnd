@@ -28,11 +28,12 @@ func Register(c *gin.Context) {
 		user.Password = util.Encode(user.Password)
 		user.UserType = constant.STUDENT
 		dao.InsertUser(&user)
-		c.JSON(http.StatusOK, gin.H{
-		"code": constant.SUCCESS,
-		"msg":  "注册成功",
-		"data": "",
-		})
+		//c.JSON(http.StatusOK, gin.H{
+		//"code": constant.SUCCESS,
+		//"msg":  "注册成功",
+		//"data": "",
+		//})
+		generateToken(c,user)
     }else{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.ERROR,

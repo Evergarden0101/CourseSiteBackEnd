@@ -15,7 +15,22 @@ func InsertCourse(course *domain.Course) {
 }
 
 
-func GetCourseById(id string) (*domain.Course) {
+func GetCourseById(id string) bool {
+	collection := dataBase.Collection("course")
+	var course domain.Course
+
+	d :=bson.D{{
+		"id",id,
+	}}
+
+	collection.FindOne(context.TODO(),d).Decode(&course)
+	if(course==(domain.Course{})){
+		return false
+	}
+	return true
+}
+
+func GetCourse(id string) *domain.Course {
 	collection := dataBase.Collection("course")
 	var course domain.Course
 
@@ -27,7 +42,7 @@ func GetCourseById(id string) (*domain.Course) {
 	return &course
 }
 
-func GetCourseByName(name string) (*domain.Course) {
+func GetCourseByName(name string) bool {
 	collection := dataBase.Collection("course")
 	var course domain.Course
 
@@ -36,7 +51,10 @@ func GetCourseByName(name string) (*domain.Course) {
 	}}
 
 	collection.FindOne(context.TODO(),d).Decode(&course)
-	return &course
+	if(course==(domain.Course{})){
+		return false
+	}
+	return true
 }
 
 func GetCourseByTeachId(teachid string) (*domain.Course) {

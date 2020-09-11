@@ -18,8 +18,9 @@ type User struct {
 type Course struct {
 	Id string `json:"id"`
 	Name string `json:"name"`
-	TearchId string `json:"teacherid"`
+	TeacherId string `json:"teacherid"`
 	Detail string `json:"detail"`
+	Rule string `json:"rule"`
 	Time time.Time `json:"time"`
 }
 

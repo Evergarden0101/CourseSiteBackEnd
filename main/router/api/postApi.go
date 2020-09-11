@@ -44,7 +44,7 @@ func DeletePost(c *gin.Context) {
 	var post *domain.Post
 	post=dao.GetPostById(postId.Id)
 	//是否为发帖人或为负责教师删除
-	if((post.UserId!=userId)&&(dao.GetCourseById(post.CourseId).TearchId!=userId)){
+	if((post.UserId!=userId)&&(dao.GetCourse(post.CourseId).TeacherId!=userId)){
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.DENIED,
 				"msg":  "无删除权限",
