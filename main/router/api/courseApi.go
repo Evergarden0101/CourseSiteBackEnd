@@ -17,7 +17,6 @@ func CreateCourse(c *gin.Context){
 	if error!=nil {
 		log.Println(error)
 	}
-	println(course)
 	course.Id=dao.GetIncrementId("course")
 	course.Time=time.Now()
 	findresult := dao.GetCourseByName(course.Name)
