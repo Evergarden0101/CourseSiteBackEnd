@@ -4,6 +4,7 @@ import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -16,8 +17,11 @@ func AddComment(c *gin.Context){
 	if err !=nil{
 		fmt.Println(err)
 	}
+
 	comment.Id = dao.GetIncrementId("comment")
 	comment.Time = time.Now()
+	comment.UserId = util.GetUser(c)
+
 	dao.InsertComment(&comment)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
