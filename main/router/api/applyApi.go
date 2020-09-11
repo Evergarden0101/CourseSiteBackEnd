@@ -41,7 +41,7 @@ func DeleteApply(c *gin.Context){
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.ERROR,
 			"msg":  "没有权限",
 			"data": "",
 		})

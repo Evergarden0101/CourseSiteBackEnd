@@ -1,6 +1,8 @@
 package util
 
 import (
+	"awesomeProject/main/constant"
+	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"errors"
 	"log"
@@ -30,6 +32,38 @@ func GetUser(c *gin.Context)(string){
 	user := claim.(*domain.CustomClaims)
 	return user.Id
 }
+
+func TeacherAuth(c *gin.Context)bool{
+	userId := GetUser(c)
+	user := dao.GetUserById(userId)
+	if user.UserType != constant.TEACHER{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "没有权限",
+			"data": "",
+		})
+		return false
+	}
+	return true
+}
+
+func TeacherCourseAuth(c *gin.Context,courseId string)bool{
+	userId := GetUser(c)
+	user := dao.GetUserById(userId)
+	course := dao.GetCourse(courseId)
+	if user.Id != course.TeacherId{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "没有权限",
+			"data": "",
+		})
+		return false
+	}
+	return true
+
+}
+
+
 
 // JWTAuth 中间件，检查token
 func JWTAuth() gin.HandlerFunc {

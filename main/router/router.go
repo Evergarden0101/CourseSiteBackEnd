@@ -52,17 +52,34 @@ func Run(){
 	r := gin.Default()
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
 
-	r.POST("/api/getcomments",api.GetComments)
+	//评论接口
+	r.POST("/api/getcomments",util.JWTAuth(),api.GetComments)
     r.POST("/api/addcomment",util.JWTAuth(),api.AddComment)
-	r.POST("/api/deletecomment",api.DeleteComment)
+	r.POST("/api/deletecomment",util.JWTAuth(),api.DeleteComment)
 
+	//用户管理接口
 	r.POST("/api/register",api.Register)
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
+
+	//视频接口
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
 	r.GET("/test",ServeHTTP)
+	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
+	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
 
+	//贴子接口
+	r.POST("/api/createpost",util.JWTAuth(),api.CreatePost)
+	r.POST("/api/deletepost",util.JWTAuth(),api.DeletePost)
+	r.POST("/api/findpostbyuser",api.FindPostByUser)
+	r.POST("/api/findpostbycourse",api.FindPostByCourse)
+	r.POST("/api/findpostbyid",api.FindPostById)
+	r.POST("/api/findpostbytitle",api.FindPostByTitle)
+	r.POST("/api/changepostistop",util.JWTAuth(),api.ChangePostIstop)
+	r.POST("/api/changepostiselite",util.JWTAuth(),api.ChangePostIselite)
+
+	//课程接口
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
 	r.POST("/api/deletestudents",api.DeleteStudent)
