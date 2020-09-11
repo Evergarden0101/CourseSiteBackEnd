@@ -47,24 +47,24 @@ func FileUpload(c *gin.Context) {
 	}
 	result:=strings.FieldsFunc(m[0].Filename,f)
 	fmt.Println(result)
-	var i  =0
-	for i,_ :=range result{
-
-		if (result[i] == "mp4"){
-			fmt.Println("mp4")
-			i=1
-		}
-	}
-	if(i==0 ){
-		fmt.Println("not mp4")
-	}
+	//var i  =0
+	//for i,_ :=range result{
+	//
+	//	if (result[i] == "mp4"){
+	//		fmt.Println("mp4")
+	//		i=1
+	//	}
+	//}
+	//if(i==0 ){
+	//	fmt.Println("not mp4")
+	//}
 
 	out,err :=os.Create("./upload"+m[0].Filename)
 	defer out.Close()
 
 	_,err=io.Copy(out,file)
 
-	c.String(http.StatusCreated,"upload sucessful")
+//	c.String(http.StatusCreated,"upload sucessful")
 
 	var video domain.Video
 	c.BindJSON(&video)

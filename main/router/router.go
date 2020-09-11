@@ -69,6 +69,7 @@ func Run(){
 
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
 	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
+	r.POST("/api/getvideostream",util.JWTAuth(),api.GetVideoStream)
 
 
 	r.Run() // listen and serve on 0.0.0.0:8080
