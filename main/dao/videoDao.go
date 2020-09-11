@@ -4,6 +4,8 @@ import (
 	"awesomeProject/main/domain"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 )
 
 func GetVideoById(id string) (*domain.Video) {
@@ -28,6 +30,32 @@ func GetVideoByCourseId(courseid string) (*domain.Video) {
 
 	collection.FindOne(context.TODO(),d).Decode(&video)
 	return &video
+}
+func GetVideosByCourseId(courseid string)[]*domain.Video{
+	collection := dataBase.Collection("video")
+	findOptions := options.Find()
+	var results []*domain.Video
+
+	cur, err := collection.Find(context.TODO(), bson.D{{"courseid",courseid}}, findOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()) {
+		var elem domain.Video
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, &elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	cur.Close(context.TODO())
+
+	return results
 }
 
 //func InserCourse(course *domain.Course) {
