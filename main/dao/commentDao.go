@@ -47,9 +47,36 @@ func GetCommentsByPostId(postId string)[]*domain.Comment{
 	return results
 }
 
+func GetCommentsByUserId(userId string)[]*domain.Comment{
+	collection := dataBase.Collection("comment")
+	findOptions := options.Find()
+	var results []*domain.Comment
+
+	cur, err := collection.Find(context.TODO(), bson.D{{"userid",userId}}, findOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()) {
+		var elem domain.Comment
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, &elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	cur.Close(context.TODO())
+
+	return results
+
+
+}
+
 func DeleteComment(commentId string){
 	collection := dataBase.Collection("comment")
 	collection.DeleteOne(context.TODO(),bson.D{{"id",commentId}})
-
-
 }
