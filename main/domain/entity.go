@@ -20,6 +20,7 @@ type Course struct {
 	Name string `json:"name"`
 	TearchId string `json:"teacherid"`
 	Detail string `json:"detail"`
+	Rule string `json:"rule"`
 	Time time.Time `json:"time"`
 }
 
