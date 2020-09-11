@@ -4,6 +4,7 @@ import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -21,6 +22,7 @@ func CreatePost(c *gin.Context) {
 
 	post.Id=dao.GetIncrementId("post")
 	post.Time=time.Now()
+	post.UserId=util.GetUser(c)
 
 	dao.InsertPost(&post)
 	c.JSON(http.StatusOK, gin.H{
@@ -35,12 +37,11 @@ func DeletePost(c *gin.Context) {
 		Id string `json:"id"`
 	}
 	var postId PostId
-	//var userId string =util.GetUser(c)
+	var userId string =util.GetUser(c)
 	error := c.BindJSON(&postId)
 	if error != nil {
 		log.Println(error)
 	}
-	var userId string="62"
 	var post *domain.Post
 	post=dao.GetPostById(postId.Id)
 	//是否为发帖人或为负责教师删除
@@ -77,6 +78,7 @@ func FindPostByUser(c *gin.Context) {
 		log.Println(error)
 	}
 	list:=dao.GetPostByUserId(userid.Id)
+	sortPost(list)
 	if len(list)>0{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
@@ -102,6 +104,7 @@ func FindPostByCourse(c *gin.Context) {
 		log.Println(error)
 	}
 	list:=dao.GetPostByCourseId(courseId.Id)
+	sortPost(list)
 	if len(list)>0{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
@@ -128,6 +131,7 @@ func FindPostByTitle(c *gin.Context) {
 		log.Println(error)
 	}
 	list:=dao.GetPostByTitle(title.Title)
+	sortPost(list)
 	if len(list)>0{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
@@ -175,8 +179,7 @@ func ChangePostIstop(c *gin.Context) {
 	}
 	var postid jsonData
 	var userid string
-	//userid=util.GetUser(c)
-	userid="68"
+	userid=util.GetUser(c)
 	error := c.BindJSON(&postid)
 	if error != nil {
 		log.Println(error)
@@ -212,8 +215,7 @@ func ChangePostIselite(c *gin.Context) {
 	}
 	var postid jsonData
 	var userid string
-	//userid=util.GetUser(c)
-	userid="68"
+	userid=util.GetUser(c)
 	error := c.BindJSON(&postid)
 	if error != nil {
 		log.Println(error)
@@ -241,5 +243,17 @@ func ChangePostIselite(c *gin.Context) {
 		}
 	}
 
+}
+
+func sortPost(list []*domain.Post)  {
+	for i:=0;i<len(list);i++{
+		for j:=1;j<len(list);j++{
+			if list[j-1].Time.Before(list[j].Time){
+				post := list[j-1]
+				list[j-1] = list[j]
+				list[j] = post
+			}
+		}
+	}
 }
 
