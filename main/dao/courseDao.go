@@ -30,6 +30,18 @@ func GetCourseById(id string) bool {
 	return true
 }
 
+func GetCourse(id string) *domain.Course {
+	collection := dataBase.Collection("course")
+	var course domain.Course
+
+	d :=bson.D{{
+		"id",id,
+	}}
+
+	collection.FindOne(context.TODO(),d).Decode(&course)
+	return &course
+}
+
 func GetCourseByName(name string) bool {
 	collection := dataBase.Collection("course")
 	var course domain.Course
