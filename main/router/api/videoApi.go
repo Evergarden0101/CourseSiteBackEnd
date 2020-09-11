@@ -5,8 +5,12 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"os"
+	"time"
 )
 
 func GetVideos(c *gin.Context)  {
@@ -60,4 +64,35 @@ func sortVideo(list []*domain.Video){
 		}
 	}
 
+}
+func GetVideoStream(c *gin.Context)  {
+	type jsonData struct {
+		Id string `json:"id"`
+		UserId string `json:"userId"`
+	}
+
+	var json jsonData
+	c.BindJSON(&json)
+	video := dao.GetVideoById(json.Id)
+	videostream,err:=os.Open(video.Path)
+	defer videostream.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": constant.SUCCESS,
+		"msg":  "播放视频成功",
+		"data": "",
+		"videostream":*videostream,
+	})
+	//http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), videostream)
+}
+func ServeHTTP(c *gin.Context) {
+	video, err := os.Open("3.mp4")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer video.Close()
+	defer fmt.Println("sss")
+	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
