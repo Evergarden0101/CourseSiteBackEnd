@@ -3,6 +3,7 @@ package router
 import (
 	"awesomeProject/main/router/api"
 	"awesomeProject/main/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	newrelic "github.com/newrelic/go-agent"
 	"log"
