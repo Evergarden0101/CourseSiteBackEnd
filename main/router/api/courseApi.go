@@ -17,6 +17,7 @@ func CreateCourse(c *gin.Context){
 	if error!=nil {
 		log.Println(error)
 	}
+	println(course)
 	course.Id=dao.GetIncrementId("course")
 	course.Time=time.Now()
 	findresult := dao.GetCourseByName(course.Name)
@@ -123,3 +124,103 @@ func DeleteStudent(c *gin.Context){
 	}
 }
 
+//返回课程列表
+//分三步，一是从SCR中获取该学生的所有课程id
+//然后通过课程id获取所有课程的结构体
+//最后要排一下序
+func GetCoursesStruct(c *gin.Context){
+	//只需要前端发送sid(学生id)
+	type jsonData struct{
+		Sid string `json:"sid"`
+	}
+
+	var json jsonData
+	err := c.BindJSON(&json)
+	if(err!=nil){
+		println(err)
+	}
+	list := dao.GetCourseListByStudentId(json.Sid)
+	sortCourse(list)
+
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"返回课程成功",
+		"data":list,
+	})
+}
+
+//获取所有圈子
+func GetAllCourse(c *gin.Context){
+	list := dao.GetAllCourse()
+	sortCourse(list)
+
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"返回课程成功",
+		"data":list,
+	})
+}
+
+//设置课程介绍
+func SetDetail(c *gin.Context){
+	type jsonData struct{
+		Cid string `json:"cid"`
+		Detail string `json:"detail"`
+	}
+	var json jsonData
+	err := c.BindJSON(&json)
+	if(err!=nil){
+		println(err)
+	}
+	if(dao.SetDetailByCourseId(json.Cid,json.Detail)){
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.SUCCESS,
+			"msg":"修改课程介绍成功",
+			"data":"",
+		})
+	} else{
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.ERROR,
+			"msg":"修改课程介绍失败",
+			"data":"",
+		})
+	}
+}
+
+//设置课程规则
+func SetRule(c *gin.Context){
+	type jsonData struct{
+		Cid string `json:"cid"`
+		Rule string `json:"rule"`
+	}
+	var json jsonData
+	err := c.BindJSON(&json)
+	if(err!=nil){
+		println(err)
+	}
+	if(dao.SetRuleByCourseId(json.Cid,json.Rule)){
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.SUCCESS,
+			"msg":"修改课程规则成功",
+			"data":"",
+		})
+	} else{
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.ERROR,
+			"msg":"修改课程规则失败",
+			"data":"",
+		})
+	}
+}
+
+func sortCourse(list []*domain.Course){
+	for i:=0;i<len(list);i++{
+		for j:=1;j<len(list);j++{
+			if list[j-1].Time.Before(list[j].Time){
+				course := list[j-1]
+				list[j-1] = list[j]
+				list[j] = course
+			}
+		}
+	}
+}

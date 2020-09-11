@@ -43,7 +43,6 @@ func GetCommentsByPostId(postId string)[]*domain.Comment{
 		log.Fatal(err)
 	}
 	cur.Close(context.TODO())
-
 	return results
 }
 

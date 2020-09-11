@@ -83,6 +83,11 @@ func Run(){
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
 	r.POST("/api/deletestudents",api.DeleteStudent)
+	r.POST("/api/getCourse",api.GetCoursesStruct)
+	r.POST("/api/getallCourse",api.GetAllCourse)
+	r.POST("/api/setdetail",api.SetDetail)
+	r.POST("/api/setrule",api.SetRule)
+
 
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
 	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
