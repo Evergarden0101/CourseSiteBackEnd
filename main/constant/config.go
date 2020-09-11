@@ -16,8 +16,8 @@ const (
 
 //学生课程/圈子关系类型
 const (
-	STU = "student" //学生
-	ASS = "assistant" //助教
+	STU = 1 //学生
+	ASS = 2 //助教
 )
 
 const(
