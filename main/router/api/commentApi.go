@@ -33,7 +33,7 @@ func GetComments(c *gin.Context){
 	var json jsonData
 	c.BindJSON(&json)
 	list := dao.GetCommentsByPostId(json.Id)
-	sort(list)
+	sortComment(list)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
 		"msg":  "获取评论成功",
@@ -66,7 +66,7 @@ func DeleteComment(c *gin.Context){
 	}
 }
 
-func sort(list []*domain.Comment){
+func sortComment(list []*domain.Comment){
 	for i:=0;i<len(list);i++{
 		for j:=1;j<len(list);j++{
 			if list[j-1].Time.Before(list[j].Time){

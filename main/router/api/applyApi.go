@@ -82,6 +82,7 @@ func DealApply(c *gin.Context){
 		dealReuslt int
 	}
 
+
 	var json jsonData
 
 	err := c.BindJSON(&json)

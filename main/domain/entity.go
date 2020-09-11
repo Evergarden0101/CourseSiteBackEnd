@@ -70,6 +70,7 @@ type StudentTopicRelation struct {
 type Post struct {
 	Id string `json:"id"`
 	UserId string `json:"userid"`
+	CourseId string `json:"courseid"`
 	Title string `json:"title"`
 	Detail string `json:"detail"`
 	IsTop bool `json:"istop"`

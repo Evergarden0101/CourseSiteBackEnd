@@ -2,7 +2,7 @@ package router
 
 import (
 	"awesomeProject/main/router/api"
-	"fmt"
+	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
 	newrelic "github.com/newrelic/go-agent"
 	"log"
@@ -52,7 +52,7 @@ func Run(){
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
 
 	r.POST("/api/getcomments",api.GetComments)
-    r.POST("/api/addcomment",api.AddComment)
+    r.POST("/api/addcomment",util.JWTAuth(),api.AddComment)
 	r.POST("/api/deletecomment",api.DeleteComment)
 
 	r.POST("/api/register",api.Register)
