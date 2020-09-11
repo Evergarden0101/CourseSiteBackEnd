@@ -1,12 +1,17 @@
 package api
 
 import (
+	"awesomeProject/main/constant"
+	"awesomeProject/main/dao"
+	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func FileUpload(c *gin.Context) {
@@ -61,19 +66,23 @@ func FileUpload(c *gin.Context) {
 
 	c.String(http.StatusCreated,"upload sucessful")
 
-	//var video domain.Video
-	//c.BindJSON(&video)
-	//video.Time=time.Now();
-	//video.Id=dao.GetIncrementId("video")
-	//video.Path="./upload"+m[0].Filename
-	//dao.InserVideo(&video)
-	//c.JSON(http.StatusOK,gin.H{
-	//	"code":constant.SUCCESS,
-	//	"msg":"申请成功",
-	//	"data":"",
-	//	"id":video.Id,
-	//
-	//})
+	var video domain.Video
+	c.BindJSON(&video)
+	video.Name=m[0].Filename
+	video.Time=time.Now()
+	video.UserId=util.GetUser(c)
+	video.Id=dao.GetIncrementId("video")
+	video.Path="./upload"+m[0].Filename
+	video.CourseId=c.PostForm("courseid")
+	dao.InserVideo(&video)
+	fmt.Println(video.CourseId)
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"申请成功",
+		"data":"",
+		"id":video.Id,
+
+	})
 	return
 
 }

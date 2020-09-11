@@ -60,6 +60,8 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
+	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
+	r.GET("/test",ServeHTTP)
 
 	r.POST("/api/createpost",util.JWTAuth(),api.CreatePost)
 	r.POST("/api/deletepost",util.JWTAuth(),api.DeletePost)
@@ -74,6 +76,9 @@ func Run(){
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
 	r.POST("/api/deletestudents",api.DeleteStudent)
+
+	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
+	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
 
 
 	r.Run() // listen and serve on 0.0.0.0:8080

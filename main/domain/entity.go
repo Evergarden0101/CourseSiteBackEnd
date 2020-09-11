@@ -34,6 +34,7 @@ type StudentCourseRelation struct {
 type Video struct {
 	Id string `json:"id"`
 	CourseId string `json:"courseid"`
+	UserId string `json:"userid"`
 	Name string `json:"name"`
 	Detail string `json:"detail"`
 	Path string `json:"path"`
