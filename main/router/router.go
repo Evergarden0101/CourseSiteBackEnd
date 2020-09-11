@@ -60,7 +60,6 @@ func Run(){
 	r.POST("/api/login",api.Login)
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
-<<<<<<< main/router/router.go
 
 	r.POST("/api/createpost",api.CreatePost)
 	r.POST("/api/deletepost",api.DeletePost)
@@ -80,9 +79,6 @@ func Run(){
 	//	})
 	//})
     r.POST("/api/fileupload",api.FileUpload)
-
-=======
->>>>>>> main/router/router.go
 	r.GET("/test",ServeHTTP)
 
 	r.POST("/api/createcourse",api.CreateCourse)
