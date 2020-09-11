@@ -3,7 +3,9 @@ package dao
 import (
 	"awesomeProject/main/domain"
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"log"
 )
 
 //增
@@ -15,45 +17,22 @@ func AddOneSCRelation(r *domain.StudentCourseRelation){
 
 
 //删
-//func DeleteById(id string) bool{
-//	collection := dataBase.Collection("topic")
-//	d := bson.D{{
-//		"id",id,
-//	}}
-//	println(id)
-//	deleteResult,err := collection.DeleteOne(context.TODO(),d)
-//	if(err!=nil){
-//		log.Fatal(err)
-//		return false
-//	}
-//	fmt.Printf("deleted %v documents in the trainers collection\n",deleteResult.DeletedCount)
-//	return true
-//}
-//
-//func DeleteByTitle(title string){
-//	collection := dataBase.Collection("topic")
-//	d := bson.D{{
-//		"title",title,
-//	}}
-//	deleteResult,err := collection.DeleteOne(context.TODO(),d)
-//	if(err!=nil){
-//		log.Fatal(err)
-//	}
-//	fmt.Printf("deleted %v documents in the trainers collection\n",deleteResult.DeletedCount)
-//}
-//
-//func DeleteByCourseId(courseId string){
-//	collection := dataBase.Collection("topic")
-//	d := bson.D{{
-//		"courseid",courseId,
-//	}}
-//	deleteResult,err := collection.DeleteOne(context.TODO(),d)
-//	if(err!=nil){
-//		log.Fatal(err)
-//	}
-//	fmt.Printf("deleted %v documents in the trainers collection\n",deleteResult.DeletedCount)
-//}
-//
+func DeleteSCR(cid string ,sid string) bool{
+	collection := dataBase.Collection("studentcourserelation")
+	d := bson.M {
+		"courseid":cid,
+		"studentid":sid,
+	}
+	deleteResult,err := collection.DeleteOne(context.TODO(),d)
+	if(err!=nil){
+		log.Fatal(err)
+		return false
+	}
+	fmt.Printf("deleted %v documents in the trainers collection\n",deleteResult.DeletedCount)
+	return true
+}
+
+
 ////改
 ////改title
 //func ChangeTitleById(id string,newTitle string) (*domain.Topic){
@@ -108,7 +87,7 @@ func AddOneSCRelation(r *domain.StudentCourseRelation){
 //
 //
 //查
-func GetSCRById(cid string,sid string) (*domain.StudentCourseRelation){
+func GetSCRById(cid string,sid string) bool{
 	collection := dataBase.Collection("studentcourserelation")
 	var scr domain.StudentCourseRelation
 	d := bson.M{
@@ -116,7 +95,10 @@ func GetSCRById(cid string,sid string) (*domain.StudentCourseRelation){
 		"courseid":cid,
 	}
 	collection.FindOne(context.TODO(),d).Decode(&scr)
-	return &scr
+	if(scr==(domain.StudentCourseRelation{})){
+		return false
+	}
+	return true
 }
 
 

@@ -3,6 +3,7 @@ package router
 import (
 	"awesomeProject/main/router/api"
 	"awesomeProject/main/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	newrelic "github.com/newrelic/go-agent"
 	"log"
@@ -30,11 +31,12 @@ func NewrelicMiddleware(appName string, key string) gin.HandlerFunc {
 	}
 }
 func ServeHTTP(c *gin.Context) {
-	video, err := os.Open("data1.txt")
+	video, err := os.Open("3.mp4")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer video.Close()
+	defer fmt.Println("sss")
 	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
 //func Options(w *gin.Context) {
@@ -59,10 +61,19 @@ func Run(){
 	r.POST("/api/modify",api.ModifyInfo)
 	r.POST("/api/findpasswd",api.FindPassword)
 
+	r.POST("/api/createpost",api.CreatePost)
+	r.POST("/api/deletepost",api.DeletePost)
+	r.POST("/api/findpostbyuser",api.FindPostByUser)
+	r.POST("/api/findpostbycourse",api.FindPostByCourse)
+	r.POST("/api/findpostbyid",api.FindPostById)
+	r.POST("/api/findpostbytitle",api.FindPostByTitle)
+	r.POST("/api/changepostistop",api.ChangePostIstop)
+	r.POST("/api/changepostiselite",api.ChangePostIselite)
+    r.POST("/api/fileupload",api.FileUpload)
 	r.GET("/test",ServeHTTP)
-
 	r.POST("/api/createcourse",api.CreateCourse)
 	r.POST("/api/includestudents",api.IncludeStudents)
+	r.POST("/api/deletestudents",api.DeleteStudent)
 
 
 	r.Run() // listen and serve on 0.0.0.0:8080
