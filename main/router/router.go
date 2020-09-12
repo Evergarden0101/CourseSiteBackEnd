@@ -69,6 +69,7 @@ func Run(){
 	r.POST("/api/findpostbytitle",api.FindPostByTitle)
 	r.POST("/api/changepostistop",util.JWTAuth(),api.ChangePostIstop)
 	r.POST("/api/changepostiselite",util.JWTAuth(),api.ChangePostIselite)
+
     r.POST("/api/fileupload",api.FileUpload)
 	r.GET("/test",ServeHTTP)
 	r.POST("/api/createcourse",api.CreateCourse)

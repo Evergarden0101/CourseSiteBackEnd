@@ -25,10 +25,12 @@ func CreatePost(c *gin.Context) {
 	post.UserId=util.GetUser(c)
 
 	dao.InsertPost(&post)
+	postlist:=dao.GetPostByCourseId(post.CourseId)
+	sortPost(postlist)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
 		"msg":  "成功发布",
-		"data": "",
+		"data": postlist,
 	})
 }
 
@@ -53,10 +55,12 @@ func DeletePost(c *gin.Context) {
 			})
 	}else{
 		if (dao.DropPostById(postId.Id)){
+			postlist:=dao.GetPostByCourseId(post.CourseId)
+			sortPost(postlist)
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.SUCCESS,
 				"msg":  "成功删除",
-				"data": "",
+				"data": postlist,
 			})
 		} else{
 			c.JSON(http.StatusOK, gin.H{
