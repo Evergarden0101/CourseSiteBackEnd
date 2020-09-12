@@ -78,13 +78,16 @@ func GetVideoStream(c *gin.Context)  {
 	if err != nil {
 		log.Fatal(err)
 	}
+	//io.Copy(c.Writer,videostream)
+
 	//c.JSON(http.StatusOK, gin.H{
 	//	"code": constant.SUCCESS,
 	//	"msg":  "播放视频成功",
 	//	"data": "",
-	//	"videostream":*videostream,
+	//	//"videostream":*videostream,
 	//})
-	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), videostream)
+	//
+	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now(), videostream)
 }
 func ServeHTTP(c *gin.Context) {
 	video, err := os.Open("3.mp4")
@@ -93,5 +96,5 @@ func ServeHTTP(c *gin.Context) {
 	}
 	defer video.Close()
 	defer fmt.Println("sss")
-	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
+//	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }

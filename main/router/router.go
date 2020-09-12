@@ -37,6 +37,7 @@ func ServeHTTP(c *gin.Context) {
 	}
 	defer video.Close()
 	defer fmt.Println("sss")
+	//io.Copy(c.Writer,video)
 	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
 func Run(){
@@ -89,6 +90,7 @@ func Run(){
 	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
 	r.POST("/api/getvideostream",util.JWTAuth(),api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
+	r.GET("/test",ServeHTTP)
 
 
 	r.Run() // listen and serve on 0.0.0.0:8080
