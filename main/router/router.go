@@ -52,6 +52,13 @@ func Run(){
 	r := gin.Default()
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
 
+	//申请接口
+	r.POST("/api/addapply",util.JWTAuth(),api.AddApply)
+	r.POST("/api/getapply",util.JWTAuth(),api.GetApply)
+	r.POST("/api/getapplybyteacher",util.JWTAuth(),api.GetApplyByTeacher)
+	r.POST("/api/dealapply",util.JWTAuth(),api.DealApply)
+	r.POST("/api/deleteapply",util.JWTAuth(),api.DeleteApply)
+
 	//评论接口
 	r.POST("/api/getcomments",util.JWTAuth(),api.GetComments)
     r.POST("/api/addcomment",util.JWTAuth(),api.AddComment)
@@ -74,13 +81,15 @@ func Run(){
 	r.POST("/api/changepostiselite",util.JWTAuth(),api.ChangePostIselite)
 
 	//课程接口
-	r.POST("/api/createcourse",api.CreateCourse)
-	r.POST("/api/includestudents",api.IncludeStudents)
-	r.POST("/api/deletestudents",api.DeleteStudent)
-	r.POST("/api/getCourse",api.GetCoursesStruct)
-	r.POST("/api/getallCourse",api.GetAllCourse)
-	r.POST("/api/setdetail",api.SetDetail)
-	r.POST("/api/setrule",api.SetRule)
+	r.POST("/api/createcourse",util.JWTAuth(),api.CreateCourse)
+	r.POST("/api/includestudents",util.JWTAuth(),api.IncludeStudents)
+	r.POST("/api/deletestudents",util.JWTAuth(),api.DeleteStudent)
+	r.POST("/api/getStudentCourse",util.JWTAuth(),api.GetStudentCourses)
+	r.POST("/api/getallCourse",util.JWTAuth(),api.GetAllCourse)
+	r.POST("/api/setdetail",util.JWTAuth(),api.SetDetail)
+	r.POST("/api/setrule",util.JWTAuth(),api.SetRule)
+	r.POST("/api/deletecourse",util.JWTAuth(),api.DeleteCourseById)
+	r.POST("/api/getTeacherCourse",util.JWTAuth(),api.GetTeacherCourse)
 
 	//视频接口
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)

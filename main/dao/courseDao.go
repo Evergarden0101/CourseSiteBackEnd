@@ -75,17 +75,34 @@ func GetCourseListByStudentId(sid string) []*domain.Course{
 	return result
 }
 
-func GetCourseByTeachId(teachid string) (*domain.Course) {
+func GetTeacherCourse(teachid string) ([]*domain.Course) {
 	collection := dataBase.Collection("course")
-	var course domain.Course
+	findOptions := options.Find()
+	var results []*domain.Course
 
-	d :=bson.D{{
-		"teachid",teachid,
-	}}
+	cur, err := collection.Find(context.TODO(), bson.D{{"teacherid",teachid}}, findOptions)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	collection.FindOne(context.TODO(),d).Decode(&course)
-	return &course
+	for cur.Next(context.TODO()) {
+		var elem domain.Course
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, &elem)
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	cur.Close(context.TODO())
+	return results
 }
+
+
+
 func DeleteCourseById(id string) bool  {
 	collction :=dataBase.Collection("course")
 	_, err :=collction.DeleteOne(context.TODO(),bson.D{{"id",id}})

@@ -4,6 +4,7 @@ import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -19,6 +20,8 @@ func CreateCourse(c *gin.Context){
 	}
 	course.Id=dao.GetIncrementId("course")
 	course.Time=time.Now()
+	course.TeacherId = util.GetUser(c)
+
 	findresult := dao.GetCourseByName(course.Name)
 	if(findresult){
 		c.JSON(http.StatusOK,gin.H{
@@ -36,12 +39,34 @@ func CreateCourse(c *gin.Context){
 	}
 }
 
+func DeleteCourseById(c *gin.Context){
+	var course domain.Course
+	error := c.BindJSON(&course)
+	if error!=nil {
+		log.Println(error)
+	}
+	if(dao.DeleteCourseById(course.Id)){
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.SUCCESS,
+			"msg":"删除课程成功",
+			"data":"",
+		})
+	}else{
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.SUCCESS,
+			"msg":"删除课程失败",
+			"data":"",
+		})
+	}
+
+}
+
 //把学生批量拉入课程中
 //需要传入的是课程id和学生id数组,其中学生id数组是以逗号隔开的
 func IncludeStudents(c *gin.Context){
 	type jsonData struct{
-		Cid string `json:"cid"`
-		Sid string `json:"sid"`
+		Cid string `json:"courseid"`
+		Sid string `json:"studentid"`
 	}
 	var json jsonData
 	var scr domain.StudentCourseRelation
@@ -80,8 +105,8 @@ func IncludeStudents(c *gin.Context){
 //把学生踢出课程，也就是删除相应的scr数据
 func DeleteStudent(c *gin.Context){
 	type jsonData struct{
-		Cid string `json:"cid"`
-		Sid string `json:"sid"`
+		Cid string `json:"courseid"`
+		Sid string `json:"studentid"`
 	}
 	var json jsonData
 	err:=c.BindJSON(&json)
@@ -89,30 +114,19 @@ func DeleteStudent(c *gin.Context){
 		println(err)
 	} else{
 		if(dao.GetCourseById(json.Cid)){
-			sids:=strings.Split(json.Sid,",")
-			len := len(sids)
-			for i:=0;i<len;i++ {
-				if(dao.GetSCRById(json.Cid,sids[i])){
-					if(!dao.DeleteSCR(json.Cid,sids[i])){
-						c.JSON(http.StatusOK,gin.H{
-							"code":constant.ERROR,
-							"msg":"删除编号为:"+sids[i]+" 的学生时发生了不明错误",
-							"data":"",
-						})
-					}
-				}else{
-					c.JSON(http.StatusOK,gin.H{
-						"code":constant.ERROR,
-						"msg":"找不到编号为:"+sids[i]+" 的学生",
-						"data":"",
-					})
-				}
+			if(dao.DeleteSCR(json.Cid,json.Sid)){
+				c.JSON(http.StatusOK,gin.H{
+					"code":constant.SUCCESS,
+					"msg":"已成功把该学生移出课程",
+					"data":"",
+				})
+			}else{
+				c.JSON(http.StatusOK,gin.H{
+					"code":constant.SUCCESS,
+					"msg":"把学生移除课程失败，该学生id为"+json.Sid,
+					"data":"",
+				})
 			}
-			c.JSON(http.StatusOK,gin.H{
-				"code":constant.SUCCESS,
-				"msg":"删除学生完成",
-				"data":"",
-			})
 		} else{
 			c.JSON(http.StatusOK,gin.H{
 				"code":constant.ERROR,
@@ -127,10 +141,10 @@ func DeleteStudent(c *gin.Context){
 //分三步，一是从SCR中获取该学生的所有课程id
 //然后通过课程id获取所有课程的结构体
 //最后要排一下序
-func GetCoursesStruct(c *gin.Context){
+func GetStudentCourses(c *gin.Context){
 	//只需要前端发送sid(学生id)
 	type jsonData struct{
-		Sid string `json:"sid"`
+		Sid string `json:"studentid"`
 	}
 
 	var json jsonData
@@ -143,7 +157,28 @@ func GetCoursesStruct(c *gin.Context){
 
 	c.JSON(http.StatusOK,gin.H{
 		"code":constant.SUCCESS,
-		"msg":"返回课程成功",
+		"msg":"返回学生课程成功",
+		"data":list,
+	})
+}
+
+//获取老师的所有课程
+func GetTeacherCourse(c *gin.Context){
+	type jsonData struct{
+		Teacherid string `json:"teacherid"`
+	}
+
+	var json jsonData
+	err := c.BindJSON(&json)
+	if(err!=nil){
+		println(err)
+	}
+	list := dao.GetTeacherCourse(json.Teacherid)
+	sortCourse(list)
+
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"返回老师课程成功",
 		"data":list,
 	})
 }
