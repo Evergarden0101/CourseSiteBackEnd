@@ -69,24 +69,16 @@ func GetVideoStream(c *gin.Context)  {
 	type jsonData struct {
 		Id string `json:"id"`
 	}
-
 	var json jsonData
-	c.BindJSON(&json)
+	json.Id = c.Query("id")
 	video := dao.GetVideoById(json.Id)
+	fmt.Println(json.Id)
+
 	videostream,err:=os.Open(video.Path)
 	defer videostream.Close()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
-	//io.Copy(c.Writer,videostream)
-
-	//c.JSON(http.StatusOK, gin.H{
-	//	"code": constant.SUCCESS,
-	//	"msg":  "播放视频成功",
-	//	"data": "",
-	//	//"videostream":*videostream,
-	//})
-	//
 	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now(), videostream)
 }
 func ServeHTTP(c *gin.Context) {
