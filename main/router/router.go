@@ -39,14 +39,6 @@ func ServeHTTP(c *gin.Context) {
 	defer fmt.Println("sss")
 	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
-//func Options(w *gin.Context) {
-//
-//	w.Header("Content-Type", "application/json")
-//	w.Header("Access-Control-Allow-Origin", "*")
-//	w.Header("Access-Control-Allow-Credentials", "false")
-//	w.Header("Access-Control-Allow-Headers", "Authorization,Content-Type")
-//	w.Header("Access-Control-Allow-Methods","GET,POST,DELETE")
-//}
 func Run(){
 
 	r := gin.Default()

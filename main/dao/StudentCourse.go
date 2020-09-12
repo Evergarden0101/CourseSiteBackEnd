@@ -16,7 +16,6 @@ func AddOneSCRelation(r *domain.StudentCourseRelation){
 	collection.InsertOne(context.TODO(),r)
 }
 
-
 //删
 func DeleteSCR(cid string ,sid string) bool{
 	collection := dataBase.Collection("studentcourserelation")
@@ -33,60 +32,6 @@ func DeleteSCR(cid string ,sid string) bool{
 	return true
 }
 
-
-////改
-////改title
-//func ChangeTitleById(id string,newTitle string) (*domain.Topic){
-//	collection := dataBase.Collection("topic")
-//	var topic domain.Topic
-//	filter := bson.D{{"id",id}}
-//	update := bson.D{{"$set",bson.D{
-//		{"title",newTitle},
-//	}}}
-//	updateResult, err := collection.UpdateOne(context.TODO(),filter,update)
-//	if err !=nil{
-//		log.Fatal(err)
-//	}
-//	fmt.Printf("matched %v documents and updated %v documents.\n",updateResult.MatchedCount,updateResult.ModifiedCount)
-//	collection.FindOne(context.TODO(),bson.D{{"title",newTitle}}).Decode(&topic)
-//	return &topic
-//}
-//
-////改Detail
-//func ChangeDetailById(id string, newdetail string) (*domain.Topic){ //3
-//	collection := dataBase.Collection("topic")
-//	var topic domain.Topic
-//	filter := bson.D{{"id",id}}
-//	update := bson.D{{"$set",bson.D{
-//		{"detail",newdetail},  //2
-//	}}}
-//	updateResult, err := collection.UpdateOne(context.TODO(),filter,update)
-//	if err !=nil{
-//		log.Fatal(err)
-//	}
-//	fmt.Printf("matched %v documents and updated %v documents.\n",updateResult.MatchedCount,updateResult.ModifiedCount)
-//	collection.FindOne(context.TODO(),bson.D{{"detail",newdetail}}).Decode(&topic)  //2
-//	return &topic
-//}
-////改rule
-//func ChangeruleById(id string,newrule string) (*domain.Topic){
-//	collection := dataBase.Collection("topic")
-//	var topic domain.Topic
-//	filter := bson.D{{"id",id}}
-//	update := bson.D{{"$set",bson.D{
-//		{"rule",newrule},  //2
-//	}}}
-//	updateResult, err := collection.UpdateOne(context.TODO(),filter,update)
-//	if err !=nil{
-//		log.Fatal(err)
-//	}
-//	fmt.Printf("matched %v documents and updated %v documents.\n",updateResult.MatchedCount,updateResult.ModifiedCount)
-//	collection.FindOne(context.TODO(),bson.D{{"rule",newrule}}).Decode(&topic)  //2
-//	return &topic
-//}
-//
-//
-//
 //查
 func GetSCRById(cid string,sid string) bool{
 	collection := dataBase.Collection("studentcourserelation")

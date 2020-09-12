@@ -31,13 +31,6 @@ func CreateCourse(c *gin.Context){
 		})
 	}else{
 		dao.InsertCourse(&course)
-		//list := dao.GetAllCourse()
-		//sortCourse(list)
-		//c.JSON(http.StatusOK,gin.H{
-		//	"code": constant.SUCCESS,
-		//	"msg":  "创建课程成功",
-		//	"data": list,
-		//})
 		GetCircles(c)
 	}
 }
