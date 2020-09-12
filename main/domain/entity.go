@@ -47,6 +47,7 @@ type Apply struct {
 	UserId string `json:"userid"`
 	Title string `json:"title"`
 	Message string `json:"message"`
+	CourseId string `json:"courseid"`
 	Type int `json:"type"`
 	Status string `json:"status"`
 	Time time.Time `json:"time"`
