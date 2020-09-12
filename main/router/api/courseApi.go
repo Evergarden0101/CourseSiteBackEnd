@@ -31,10 +31,12 @@ func CreateCourse(c *gin.Context){
 		})
 	}else{
 		dao.InsertCourse(&course)
+		list := dao.GetAllCourse()
+		sortCourse(list)
 		c.JSON(http.StatusOK,gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "创建课程成功",
-			"data": "",
+			"data": list,
 		})
 	}
 }
@@ -160,6 +162,25 @@ func GetStudentCourses(c *gin.Context){
 		"msg":"返回学生课程成功",
 		"data":list,
 	})
+}
+
+func GetCircles(c *gin.Context){
+
+	userId := util.GetUser(c)
+	allList := dao.GetAllCourse()
+	sortCourse(allList)
+	teacherList := dao.GetTeacherCourse(userId)
+	sortCourse(teacherList)
+	type result struct {
+		allList []*domain.Course
+		teacherList []*domain.Course
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"课程列表成功",
+		"data": result{allList,teacherList},
+	})
+
 }
 
 //获取老师的所有课程
