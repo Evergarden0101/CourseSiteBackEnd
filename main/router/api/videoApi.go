@@ -68,7 +68,6 @@ func sortVideo(list []*domain.Video){
 func GetVideoStream(c *gin.Context)  {
 	type jsonData struct {
 		Id string `json:"id"`
-		UserId string `json:"userId"`
 	}
 
 	var json jsonData
@@ -79,13 +78,13 @@ func GetVideoStream(c *gin.Context)  {
 	if err != nil {
 		log.Fatal(err)
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"code": constant.SUCCESS,
-		"msg":  "播放视频成功",
-		"data": "",
-		"videostream":*videostream,
-	})
-	//http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), videostream)
+	//c.JSON(http.StatusOK, gin.H{
+	//	"code": constant.SUCCESS,
+	//	"msg":  "播放视频成功",
+	//	"data": "",
+	//	"videostream":*videostream,
+	//})
+	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), videostream)
 }
 func ServeHTTP(c *gin.Context) {
 	video, err := os.Open("3.mp4")
