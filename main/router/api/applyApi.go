@@ -4,6 +4,7 @@ import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -16,6 +17,7 @@ func AddApply(c *gin.Context){
 	apply.Time = time.Now()
 	apply.Status = constant.NONE
 	apply.Id = dao.GetIncrementId("apply")
+	apply.UserId = util.GetUser(c)
 	dao.InsertApply(&apply)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
@@ -32,7 +34,7 @@ func DeleteApply(c *gin.Context){
 
 	var json jsonData
 	apply := dao.GetApplyById(json.applyId)
-	if apply.UserId == "" {
+	if (apply != &domain.Apply{}&&apply.UserId == util.GetUser(c)) {
 		dao.DeleteApplyById(apply.Id)
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
@@ -41,7 +43,7 @@ func DeleteApply(c *gin.Context){
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.ERROR,
 			"msg":  "没有权限",
 			"data": "",
 		})

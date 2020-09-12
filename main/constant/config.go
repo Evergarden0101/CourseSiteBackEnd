@@ -14,17 +14,17 @@ const (
 	TEACHER = "teacher" //教师
 )
 
-//学生课程/圈子关系类型
+//学生课程关系类型
 const (
-	STU = "student" //学生
-	ASS = "assistant" //助教
+	STU = 1 //学生
+	ASS = 2 //助教
 )
-
+//申请类型
 const(
 	TEACHER_JOIN = "TEACHER_JOIN"
 	COURSE_JOIN = "COURSE_JOIN"
 )
-
+//审核结果
 const(
 	NONE = "none"
 	AGREE = "AGREE"

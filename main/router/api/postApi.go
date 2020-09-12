@@ -64,7 +64,7 @@ func DeletePost(c *gin.Context) {
 			})
 		} else{
 			c.JSON(http.StatusOK, gin.H{
-				"code": constant.SUCCESS,
+				"code": constant.ERROR,
 				"msg":  "删除失败",
 				"data": "",
 			})
@@ -97,7 +97,7 @@ func FindPostByUser(c *gin.Context) {
 		})
 	}
 
-	}
+}
 func FindPostByCourse(c *gin.Context) {
 	type jsonData struct {
 		Id string `json:"id"`
@@ -190,7 +190,7 @@ func ChangePostIstop(c *gin.Context) {
 	}
 	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.DENIED,
 			"msg":  "无操作权限",
 			"data": "",
 		})
@@ -204,7 +204,7 @@ func ChangePostIstop(c *gin.Context) {
 			})
 		}else{
 			c.JSON(http.StatusOK, gin.H{
-				"code": constant.SUCCESS,
+				"code": constant.ERROR,
 				"msg":  "操作失败",
 				"data": "",
 			})
@@ -226,7 +226,7 @@ func ChangePostIselite(c *gin.Context) {
 	}
 	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.DENIED,
 			"msg":  "无操作权限",
 			"data": "",
 		})
@@ -240,7 +240,7 @@ func ChangePostIselite(c *gin.Context) {
 			})
 		}else{
 			c.JSON(http.StatusOK, gin.H{
-				"code": constant.SUCCESS,
+				"code": constant.ERROR,
 				"msg":  "操作失败",
 				"data": "",
 			})
