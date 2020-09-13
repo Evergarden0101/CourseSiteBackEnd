@@ -50,7 +50,7 @@ func GetComments(c *gin.Context){
 	var resultList []*result
 	for _,v :=range list{
 		var res result
-		res.Time = v.Time.String()
+		res.Time = v.Time.Format("2006-01-02 15:04:05")
 		res.Id = v.Id
 		res.Detail = v.Detail
 		user := dao.GetUserById(v.UserId)
