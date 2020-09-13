@@ -5,11 +5,8 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -72,21 +69,10 @@ func GetVideoStream(c *gin.Context)  {
 	var json jsonData
 	json.Id = c.Query("id")
 	video := dao.GetVideoById(json.Id)
-	fmt.Println(json.Id)
 
-	videostream,err:=os.Open(video.Path)
+
+	videostream := util.Read(video.Path)
 	defer videostream.Close()
-	if err != nil {
-		fmt.Println(err)
-	}
+
 	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now(), videostream)
-}
-func ServeHTTP(c *gin.Context) {
-	video, err := os.Open("3.mp4")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer video.Close()
-	defer fmt.Println("sss")
-//	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now(), video)
 }
