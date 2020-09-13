@@ -269,7 +269,7 @@ func SetRule(c *gin.Context){
 		c.JSON(http.StatusOK,gin.H{
 			"code":constant.SUCCESS,
 			"msg":"修改课程规则成功",
-			"data":"",
+			"data":dao.GetCourse(json.Cid).Rule,
 		})
 	} else{
 		c.JSON(http.StatusOK,gin.H{
