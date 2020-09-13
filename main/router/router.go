@@ -73,9 +73,6 @@ func Run(){
 	r.POST("/api/changepostistop",util.JWTAuth(),api.ChangePostIstop)
 	r.POST("/api/changepostiselite",util.JWTAuth(),api.ChangePostIselite)
 
-
-    r.POST("/api/fileupload",api.FileUpload)
-
 	//课程接口
 	r.POST("/api/createcourse",util.JWTAuth(),api.CreateCourse)
 	r.POST("/api/includestudents",util.JWTAuth(),api.IncludeStudents)
@@ -93,7 +90,6 @@ func Run(){
 	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
 	r.POST("/api/getvideostream",util.JWTAuth(),api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
-
 	r.GET("/test",ServeHTTP)
 
 
