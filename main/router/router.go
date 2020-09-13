@@ -91,6 +91,8 @@ func Run(){
 	r.GET("/api/getvideostream",api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
 
+	r.GET("/test",util.Image)
+
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 

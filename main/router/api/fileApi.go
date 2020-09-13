@@ -5,20 +5,12 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
 	"net/http"
-	"os"
-	"strings"
 	"time"
 )
 
 func FileUpload(c *gin.Context) {
-
-	//c.Writer
-	//
-	//c.Request
 
 	err :=c.Request.ParseMultipartForm(100000)
 	if err !=nil{
@@ -26,45 +18,17 @@ func FileUpload(c *gin.Context) {
 		return
 	}
 
-	//file,header,err:=c.Request.FormFile("video")
-	//
-	//
-	//filename :=header.Filename
 	m:=c.Request.MultipartForm.File["video"]
 
-	fmt.Println(c.Request.MultipartForm.File)
-	file,err:=m[0].Open()
-	defer file.Close()
-//	filename:=c.Request.MultipartForm.Value["filename"]
+	//fmt.Println(c.Request.MultipartForm.File)
+	//file,err:=m[0].Open()
+	//defer file.Close()
+	//fmt.Println(file,err,m[0].Filename)
 
-	fmt.Println(file,err,m[0].Filename)
-	f:= func(c rune) bool{
-		if(c=='.'){
-			return true
-		}else {
-			return false
-		}
-	}
-	result:=strings.FieldsFunc(m[0].Filename,f)
-	fmt.Println(result)
-	//var i  =0
-	//for i,_ :=range result{
+	//out,err :=os.Create("./upload"+m[0].Filename)
+	//defer out.Close()
 	//
-	//	if (result[i] == "mp4"){
-	//		fmt.Println("mp4")
-	//		i=1
-	//	}
-	//}
-	//if(i==0 ){
-	//	fmt.Println("not mp4")
-	//}
-
-	out,err :=os.Create("./upload"+m[0].Filename)
-	defer out.Close()
-
-	_,err=io.Copy(out,file)
-
-//	c.String(http.StatusCreated,"upload sucessful")
+	//_,err=io.Copy(out,file)
 
 	var video domain.Video
 	c.BindJSON(&video)
@@ -72,17 +36,17 @@ func FileUpload(c *gin.Context) {
 	video.Time=time.Now()
 	video.UserId=util.GetUser(c)
 	video.Id=dao.GetIncrementId("video")
-	video.Path="./upload"+m[0].Filename
 	video.CourseId=c.PostForm("courseid")
+	video.Path=video.CourseId+"/"+m[0].Filename
 	dao.InserVideo(&video)
-	fmt.Println(video.CourseId)
+    util.Write(m[0],video.CourseId)
+
 	c.JSON(http.StatusOK,gin.H{
 		"code":constant.SUCCESS,
-		"msg":"申请成功",
+		"msg":"上传成功",
 		"data":"",
 		"id":video.Id,
 
 	})
 	return
-
 }
