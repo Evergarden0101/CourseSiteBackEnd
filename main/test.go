@@ -32,10 +32,7 @@ func PrepareData(){
 func main() {
 
 
-	//dao.InitDB()
-	//PrepareData()
-	//fmt.Println(util.GetIncrementId("user"))
-	//http.Handle("/staticfile/", http.StripPrefix("/staticfile/", http.FileServer(http.Dir("./staticfile"))))
-    router.Run()
+	dao.InitDB()
+	router.Run()
 }
 
