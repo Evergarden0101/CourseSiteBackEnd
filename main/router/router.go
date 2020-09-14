@@ -91,6 +91,9 @@ func Run(){
 	r.GET("/api/getvideostream",api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
 
+	r.POST("/api/imageupload",util.JWTAuth(),api.ImageUpload)
+	r.GET("/api/getimage",api.GetFile)
+
 	r.GET("/test",util.Image)
 
 

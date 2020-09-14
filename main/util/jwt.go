@@ -37,8 +37,24 @@ func TeacherAuth(c *gin.Context)bool{
 	userId := GetUser(c)
 	user := dao.GetUserById(userId)
 	if user.UserType != constant.TEACHER{
+		log.Println(user)
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.ERROR,
+			"code": constant.DENIED,
+			"msg":  "没有权限",
+			"data": "",
+		})
+		return false
+	}
+	return true
+}
+
+func AdminAuth(c *gin.Context)bool{
+	userId := GetUser(c)
+	user := dao.GetUserById(userId)
+	if user.UserType != constant.ADMIN{
+		log.Println(user)
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.DENIED,
 			"msg":  "没有权限",
 			"data": "",
 		})
@@ -52,6 +68,8 @@ func TeacherCourseAuth(c *gin.Context,courseId string)bool{
 	user := dao.GetUserById(userId)
 	course := dao.GetCourse(courseId)
 	if user.Id != course.TeacherId{
+		log.Println(user)
+		log.Println(course)
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.ERROR,
 			"msg":  "没有权限",
@@ -60,10 +78,35 @@ func TeacherCourseAuth(c *gin.Context,courseId string)bool{
 		return false
 	}
 	return true
-
 }
 
+func StudentCourseAuth(c *gin.Context,courseId string)bool{
+	userId := GetUser(c)
+	if !dao.GetSCRById(courseId,userId){
+		log.Println(userId)
+		log.Println(courseId)
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "没有权限",
+			"data": "",
+		})
+		return false
+	}
+	return true
+}
 
+func BindData(c *gin.Context,obj interface{})bool{
+	err :=c.ShouldBindJSON(obj)
+	if err !=nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"msg":  err.Error(),
+		})
+		return false
+	}
+	log.Println(obj)
+	return true
+}
 
 // JWTAuth 中间件，检查token
 func JWTAuth() gin.HandlerFunc {

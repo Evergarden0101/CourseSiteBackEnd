@@ -47,6 +47,17 @@ func GetSCRById(cid string,sid string) bool{
 	return true
 }
 
+func GetSCR(cid string,sid string)*domain.StudentCourseRelation{
+	collection := dataBase.Collection("studentcourserelation")
+	var scr domain.StudentCourseRelation
+	d := bson.M{
+		"studentid":sid,
+		"courseid":cid,
+	}
+	collection.FindOne(context.TODO(),d).Decode(&scr)
+	return &scr
+}
+
 //获取特定学生的SCR列表
 func GetSCRListBySid(sid string) []*domain.StudentCourseRelation{
 	collection := dataBase.Collection("studentcourserelation")

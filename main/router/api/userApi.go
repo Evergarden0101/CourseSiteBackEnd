@@ -5,7 +5,6 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -18,10 +17,8 @@ import (
 func Register(c *gin.Context) {
 
 	var user domain.User
-    error := c.BindJSON(&user)
-
-    if error != nil {
-		log.Println(error)
+    if !util.BindData(c,&user){
+    	return
 	}
 
 	if (dao.CheckId(user.Id) && dao.CheckEmail(user.Email)) {
@@ -52,10 +49,8 @@ func Login(c *gin.Context){
 	}
 
 	var json jsonData
-	error := c.BindJSON(&json)
-	fmt.Println(json)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&json){
+		return
 	}
 
 	user := dao.GetUserById(json.Id)
@@ -68,7 +63,6 @@ func Login(c *gin.Context){
 			"msg":  "学号和密码不匹配",
 			"data": "",
 		})
-
 	}
 }
 
@@ -78,11 +72,10 @@ func Login(c *gin.Context){
 func ModifyInfo(c *gin.Context){
 
 	var user domain.User
-	error := c.BindJSON(&user)
-
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&user){
+		return
 	}
+
 	oldUser := dao.GetUserById(user.Id)
 	if oldUser != nil{
 		oldUser.Email = user.Email
@@ -115,14 +108,11 @@ func FindPassword(c *gin.Context){
 		Id string `json:"id"`
 		Email string  `json:"email"`
 	}
-
 	var json jsonData
-	error := c.BindJSON(&json)
-	fmt.Println(json)
-
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&json){
+		return
 	}
+
 	user := dao.GetUserById(json.Id)
 	if user !=nil && user.Email == json.Email{
 		str := make([]string,1)

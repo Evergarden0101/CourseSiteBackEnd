@@ -1,5 +1,7 @@
 package constant
 
+import "time"
+
 const (
 	MAIL_USER = "2541601705@qq.com"
 	MAIL_PASS = "lqbaygvkeuejebee"
@@ -30,3 +32,6 @@ const(
 	AGREE = "AGREE"
 	DISAGREE = "DISAGREE"
 )
+
+var CstZone = time.FixedZone("CST", 8*3600)
+

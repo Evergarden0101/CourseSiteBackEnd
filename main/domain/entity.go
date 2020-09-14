@@ -103,3 +103,11 @@ type Comment struct {
 	Detail string `json:"detail"`
 	Time time.Time `json:"time"`
 }
+
+type File struct {
+	Id string `json:"id"`
+	Url string `json:"url"`
+	Time time.Time `json:"time"`
+	Name string `json:"name"`
+
+}

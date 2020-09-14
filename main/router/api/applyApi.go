@@ -5,7 +5,6 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -13,11 +12,15 @@ import (
 
 func AddApply(c *gin.Context){
 	var apply domain.Apply
-	c.BindJSON(&apply)
+	if !util.BindData(c,apply){
+		return
+	}
+
 	apply.Time = time.Now()
 	apply.Status = constant.NONE
 	apply.Id = dao.GetIncrementId("apply")
 	apply.UserId = util.GetUser(c)
+
 	dao.InsertApply(&apply)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
@@ -31,10 +34,13 @@ func DeleteApply(c *gin.Context){
 		applyId string
 	}
 
-
 	var json jsonData
+	if !util.BindData(c,json){
+		return
+	}
+
 	apply := dao.GetApplyById(json.applyId)
-	if (apply != &domain.Apply{}&&apply.UserId == util.GetUser(c)) {
+	if (apply.UserId == util.GetUser(c)) {
 		dao.DeleteApplyById(apply.Id)
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
@@ -66,8 +72,13 @@ func GetApply(c *gin.Context){
 	type jsonData struct {
 		applyId string
 	}
-
 	var json jsonData
+	if !util.BindData(c,json){
+		return
+	}
+	if !util.AdminAuth(c){
+		return
+	}
 	apply := dao.GetApplyById(json.applyId)
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
@@ -84,13 +95,14 @@ func DealApply(c *gin.Context){
 		dealReuslt int
 	}
 
-
 	var json jsonData
-
-	err := c.BindJSON(&json)
-	if err !=nil{
-		fmt.Println(err)
+	if !util.BindData(c,json){
+		return
 	}
+	if !util.AdminAuth(c){
+		return
+	}
+
 	apply := dao.GetApplyById(json.applyId)
 	if json.dealReuslt == 1{
 		apply.Status = constant.AGREE

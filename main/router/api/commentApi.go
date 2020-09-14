@@ -5,7 +5,6 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -13,9 +12,13 @@ import (
 
 func AddComment(c *gin.Context){
 	var comment domain.Comment
-	err := c.BindJSON(&comment)
-	if err !=nil{
-		fmt.Println(err)
+	if !util.BindData(c,&comment){
+		return
+	}
+
+	post := dao.GetPostById(comment.Id)
+    if !util.TeacherCourseAuth(c,post.CourseId) && !util.StudentCourseAuth(c,post.CourseId){
+    	return
 	}
 
 	comment.Id = dao.GetIncrementId("comment")
@@ -35,7 +38,15 @@ func GetComments(c *gin.Context){
 		Id string `json:"id"`
 	}
 	var json jsonData
-	c.BindJSON(&json)
+	if !util.BindData(c,&json){
+		return
+	}
+	post := dao.GetPostById(json.Id)
+	if !util.TeacherCourseAuth(c,post.CourseId) && !util.StudentCourseAuth(c,post.CourseId){
+		return
+	}
+
+
 	list := dao.GetCommentsByPostId(json.Id)
 	userId := util.GetUser(c)
 	type result struct{
@@ -76,7 +87,10 @@ func DeleteComment(c *gin.Context){
 	}
 
 	var json jsonData
-	c.BindJSON(&json)
+	if !util.BindData(c,&json){
+		return
+	}
+
 	userId := util.GetUser(c)
 	comment := dao.GetComment(json.Id)
 

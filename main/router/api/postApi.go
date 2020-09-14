@@ -6,7 +6,6 @@ import (
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"time"
 )
@@ -14,10 +13,11 @@ import (
 func CreatePost(c *gin.Context) {
 
 	var post domain.Post
-	error := c.BindJSON(&post)
-
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&post){
+		return
+	}
+	if !util.TeacherCourseAuth(c,post.CourseId)&&!util.StudentCourseAuth(c,post.CourseId){
+		return
 	}
 
 	post.Id=dao.GetIncrementId("post")
@@ -40,10 +40,10 @@ func DeletePost(c *gin.Context) {
 	}
 	var postId PostId
 	var userId string =util.GetUser(c)
-	error := c.BindJSON(&postId)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&postId){
+		return
 	}
+
 	var post *domain.Post
 	post=dao.GetPostById(postId.Id)
 	//是否为发帖人或为负责教师删除
@@ -77,10 +77,10 @@ func FindPostByUser(c *gin.Context) {
 		Id string `json:"id"`
 	}
 	var userid jsonData
-	error := c.BindJSON(&userid)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&userid){
+		return
 	}
+
 	list:=dao.GetPostByUserId(userid.Id)
 	sortPost(list)
 	if len(list)>0{
@@ -103,10 +103,10 @@ func FindPostByCourse(c *gin.Context) {
 		Id string `json:"id"`
 	}
 	var courseId jsonData
-	error := c.BindJSON(&courseId)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&courseId){
+		return
 	}
+
 	list:=dao.GetPostByCourseId(courseId.Id)
 	sortPost(list)
 	if len(list)>0{
@@ -130,10 +130,10 @@ func FindPostByTitle(c *gin.Context) {
 		Title string `json:"title"`
 	}
 	var title jsonData
-	error := c.BindJSON(&title)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&title){
+		return
 	}
+
 	list:=dao.GetPostByTitle(title.Title)
 	sortPost(list)
 	if len(list)>0{
@@ -157,9 +157,8 @@ func FindPostById(c *gin.Context) {
 		Id string `json:"id"`
 	}
 	var userid jsonData
-	error := c.BindJSON(&userid)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&userid){
+		return
 	}
 	ans:=dao.GetPostById(userid.Id)
 	if ans!=nil{
@@ -184,9 +183,8 @@ func ChangePostIstop(c *gin.Context) {
 	var postid jsonData
 	var userid string
 	userid=util.GetUser(c)
-	error := c.BindJSON(&postid)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&postid){
+		return
 	}
 	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{
@@ -220,9 +218,8 @@ func ChangePostIselite(c *gin.Context) {
 	var postid jsonData
 	var userid string
 	userid=util.GetUser(c)
-	error := c.BindJSON(&postid)
-	if error != nil {
-		log.Println(error)
+	if !util.BindData(c,&postid){
+		return
 	}
 	if(dao.GetCourse(dao.GetPostById(postid.Id).CourseId).TeacherId!=userid){
 		c.JSON(http.StatusOK, gin.H{

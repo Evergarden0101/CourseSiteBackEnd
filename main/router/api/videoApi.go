@@ -15,7 +15,9 @@ func GetVideos(c *gin.Context)  {
 		Courseid string `json:"courseid"`
 	}
 	var json jsonData
-	c.BindJSON(&json)
+	if !util.BindData(c,&json){
+		return
+	}
 	list :=dao.GetVideosByCourseId(json.Courseid)
 	sortVideo(list)
 	c.JSON(http.StatusOK,gin.H{
@@ -32,7 +34,9 @@ func DeleteVideo(c *gin.Context){
 	}
 
 	var json jsonData
-	c.BindJSON(&json)
+	if !util.BindData(c,&json){
+		return
+	}
 	video := dao.GetVideoById(json.Id)
 	if video.UserId ==util.GetUser(c) {
 		dao.DeleteVideoById(video.Id)

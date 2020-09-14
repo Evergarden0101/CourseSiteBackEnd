@@ -6,18 +6,22 @@ import (
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 	"strings"
 	"time"
 )
 
 func CreateCourse(c *gin.Context){
-	var course domain.Course
-	error := c.BindJSON(&course)
-	if error!=nil {
-		log.Println(error)
+
+	if !util.TeacherAuth(c){
+		return
 	}
+
+	var course domain.Course
+	if !util.BindData(c,&course){
+		return
+	}
+
 	course.Id=dao.GetIncrementId("course")
 	course.Time=time.Now()
 	course.TeacherId = util.GetUser(c)
@@ -36,11 +40,16 @@ func CreateCourse(c *gin.Context){
 }
 
 func DeleteCourseById(c *gin.Context){
+
+
 	var course domain.Course
-	error := c.BindJSON(&course)
-	if error!=nil {
-		log.Println(error)
+	if !util.BindData(c,&course){
+		return
 	}
+	if !util.TeacherCourseAuth(c,course.Id){
+		return
+	}
+
 	if(dao.DeleteCourseById(course.Id)){
 		c.JSON(http.StatusOK,gin.H{
 			"code":constant.SUCCESS,
@@ -65,71 +74,78 @@ func IncludeStudents(c *gin.Context){
 		Sid string `json:"studentid"`
 	}
 	var json jsonData
-	var scr domain.StudentCourseRelation
-	err:=c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
-	} else{
-		if(dao.GetCourseById(json.Cid)){
-			sids:=strings.Split(json.Sid,",")
-			len := len(sids)
-			for i:=0;i<len;i++ {
-				if(!dao.GetSCRById(json.Cid,sids[i])){
-					//构造相应的SCR结构体
-					scr.Id=dao.GetIncrementId("studentcourserelation")
-					scr.Type=1
-					scr.CourseId=json.Cid
-					scr.StudentId=sids[i]
-					dao.AddOneSCRelation(&scr)
-				}
-			}
-			c.JSON(http.StatusOK,gin.H{
-				"code":constant.SUCCESS,
-				"msg":"加入学生成功",
-				"data":"",
-			})
-		} else{
-			c.JSON(http.StatusOK,gin.H{
-				"code":constant.ERROR,
-				"msg":"查找不到该课程，您输入的课程id为"+json.Cid,
-				"data":"",
-			})
-		}
+	if !util.BindData(c,&json){
+		return
 	}
+	if !util.TeacherCourseAuth(c,json.Cid){
+		return
+	}
+
+	var scr domain.StudentCourseRelation
+
+	if(dao.GetCourseById(json.Cid)){
+		sids:=strings.Split(json.Sid,",")
+		len := len(sids)
+		for i:=0;i<len;i++ {
+			if(!dao.GetSCRById(json.Cid,sids[i])){
+					//构造相应的SCR结构体
+				scr.Id=dao.GetIncrementId("studentcourserelation")
+				scr.Type=1
+				scr.CourseId=json.Cid
+				scr.StudentId=sids[i]
+				dao.AddOneSCRelation(&scr)
+			}
+		}
+		c.JSON(http.StatusOK,gin.H{
+			"code":constant.SUCCESS,
+			"msg":"加入学生成功",
+			"data":"",
+		})
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "查找不到该课程，您输入的课程id为" + json.Cid,
+			"data": "",
+		})
+	}
+
+
 }
 
 //把学生踢出课程，也就是删除相应的scr数据
-func DeleteStudent(c *gin.Context){
-	type jsonData struct{
+func DeleteStudent(c *gin.Context) {
+	type jsonData struct {
 		Cid string `json:"courseid"`
 		Sid string `json:"studentid"`
 	}
 	var json jsonData
-	err:=c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
-	} else{
-		if(dao.GetCourseById(json.Cid)){
-			if(dao.DeleteSCR(json.Cid,json.Sid)){
-				c.JSON(http.StatusOK,gin.H{
-					"code":constant.SUCCESS,
-					"msg":"已成功把该学生移出课程",
-					"data":"",
-				})
-			}else{
-				c.JSON(http.StatusOK,gin.H{
-					"code":constant.SUCCESS,
-					"msg":"把学生移除课程失败，该学生id为"+json.Sid,
-					"data":"",
-				})
-			}
-		} else{
-			c.JSON(http.StatusOK,gin.H{
-				"code":constant.ERROR,
-				"msg":"查找不到该课程，您输入的课程id为"+json.Cid,
-				"data":"",
+	if !util.BindData(c, &json) {
+		return
+	}
+	if !util.TeacherCourseAuth(c,json.Cid){
+		return
+	}
+
+	if (dao.GetCourseById(json.Cid)) {
+		if (dao.DeleteSCR(json.Cid, json.Sid)) {
+			c.JSON(http.StatusOK, gin.H{
+				"code": constant.SUCCESS,
+				"msg":  "已成功把该学生移出课程",
+				"data": "",
+			})
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"code": constant.SUCCESS,
+				"msg":  "把学生移除课程失败，该学生id为" + json.Sid,
+				"data": "",
 			})
 		}
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.ERROR,
+			"msg":  "查找不到该课程，您输入的课程id为" + json.Cid,
+			"data": "",
+		})
 	}
 }
 
@@ -144,10 +160,10 @@ func GetStudentCourses(c *gin.Context){
 	}
 
 	var json jsonData
-	err := c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
+	if !util.BindData(c, &json) {
+		return
 	}
+
 	list := dao.GetCourseListByStudentId(json.Sid)
 	sortCourse(list)
 
@@ -200,12 +216,11 @@ func GetTeacherCourse(c *gin.Context){
 	type jsonData struct{
 		Teacherid string `json:"teacherid"`
 	}
-
 	var json jsonData
-	err := c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
+	if !util.BindData(c, &json) {
+		return
 	}
+
 	list := dao.GetTeacherCourse(json.Teacherid)
 	sortCourse(list)
 
@@ -235,10 +250,13 @@ func SetDetail(c *gin.Context){
 		Detail string `json:"detail"`
 	}
 	var json jsonData
-	err := c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
+	if !util.BindData(c, &json) {
+		return
 	}
+	if !util.TeacherCourseAuth(c,json.Cid){
+		return
+	}
+
 	if(dao.SetDetailByCourseId(json.Cid,json.Detail)){
 		c.JSON(http.StatusOK,gin.H{
 			"code":constant.SUCCESS,
@@ -261,10 +279,13 @@ func SetRule(c *gin.Context){
 		Rule string `json:"rule"`
 	}
 	var json jsonData
-	err := c.BindJSON(&json)
-	if(err!=nil){
-		println(err)
+	if !util.BindData(c, &json) {
+		return
 	}
+	if !util.TeacherCourseAuth(c,json.Cid){
+		return
+	}
+
 	if(dao.SetRuleByCourseId(json.Cid,json.Rule)){
 		c.JSON(http.StatusOK,gin.H{
 			"code":constant.SUCCESS,

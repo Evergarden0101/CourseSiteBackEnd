@@ -19,19 +19,8 @@ func FileUpload(c *gin.Context) {
 	}
 
 	m:=c.Request.MultipartForm.File["video"]
-
-	//fmt.Println(c.Request.MultipartForm.File)
-	//file,err:=m[0].Open()
-	//defer file.Close()
-	//fmt.Println(file,err,m[0].Filename)
-
-	//out,err :=os.Create("./upload"+m[0].Filename)
-	//defer out.Close()
-	//
-	//_,err=io.Copy(out,file)
-
 	var video domain.Video
-	c.BindJSON(&video)
+
 	video.Name=m[0].Filename
 	video.Time=time.Now()
 	video.UserId=util.GetUser(c)
@@ -49,4 +38,41 @@ func FileUpload(c *gin.Context) {
 
 	})
 	return
+}
+
+func ImageUpload(c *gin.Context){
+
+	err :=c.Request.ParseMultipartForm(100000)
+	if err !=nil{
+		http.Error(c.Writer,err.Error(),http.StatusInternalServerError)
+		return
+	}
+
+	m:=c.Request.MultipartForm.File["image"]
+	//fmt.Println(m[0])
+	var file domain.File
+	file.Time = time.Now().In(constant.CstZone)
+	file.Id = dao.GetIncrementId("file")
+	file.Name = m[0].Filename
+	file.Url = util.GetUser(c)+"/"+m[0].Filename
+    dao.InsertFile(&file)
+	util.Write(m[0],util.GetUser(c))
+
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"上传成功",
+		"data":file,
+	})
+	return
+
+}
+
+func GetFile(c *gin.Context){
+	var file domain.File
+	file.Id = c.Query("id")
+    file = *dao.GetFileById(file.Id)
+	filetream := util.Read(file.Url)
+	defer filetream.Close()
+
+	http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
 }
