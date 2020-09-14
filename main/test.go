@@ -5,8 +5,10 @@ import (
 	"awesomeProject/main/domain"
 	"awesomeProject/main/router"
 	"awesomeProject/main/util"
+	"fmt"
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/newrelic/go-agent"
+	"time"
 )
 import "awesomeProject/main/dao"
 
@@ -33,6 +35,7 @@ func main() {
 
 
 	dao.InitDB()
+	fmt.Println(time.Now().In(constant.CstZone))
 	router.Run()
 }
 

@@ -33,5 +33,5 @@ const(
 	DISAGREE = "DISAGREE"
 )
 
-var CstZone = time.FixedZone("CST", 8*3600)
+var CstZone,_ = time.LoadLocation("Asia/Shanghai")
 
