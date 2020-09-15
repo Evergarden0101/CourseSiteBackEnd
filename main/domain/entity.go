@@ -87,6 +87,7 @@ type Message struct {
 	FromId string `json:"fromid"`
 	ToId string `json:"toid"`
 	Detail string `json:"detail"`
+	Read bool `json:"read"`
 	Time time.Time `json:"time"`
 }
 

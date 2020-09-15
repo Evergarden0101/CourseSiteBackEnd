@@ -91,6 +91,11 @@ func Run(){
 	r.GET("/api/getvideostream",api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
 
+	//私信接口
+	r.POST("/api/sendmessage",util.JWTAuth(),api.SendMessage)
+	r.POST("/api/receivemessage",util.JWTAuth(),api.FindMessageByUser)
+	r.POST("/api/readmessage",util.JWTAuth(),api.ReadMessage)
+
 	r.POST("/api/imageupload",util.JWTAuth(),api.ImageUpload)
 	r.GET("/api/getimage",api.GetFile)
 
