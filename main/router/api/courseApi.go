@@ -23,7 +23,7 @@ func CreateCourse(c *gin.Context){
 	}
 
 	course.Id=dao.GetIncrementId("course")
-	course.Time=time.Now()
+	course.Time=time.Now().In(constant.CstZone)
 	course.TeacherId = util.GetUser(c)
 
 	findresult := dao.GetCourseByName(course.Name)

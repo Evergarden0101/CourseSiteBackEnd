@@ -78,5 +78,5 @@ func GetVideoStream(c *gin.Context)  {
 	videostream := util.Read(video.Path)
 	defer videostream.Close()
 
-	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now(), videostream)
+	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now().In(constant.CstZone), videostream)
 }

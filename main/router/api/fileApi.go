@@ -22,7 +22,7 @@ func FileUpload(c *gin.Context) {
 	var video domain.Video
 
 	video.Name=m[0].Filename
-	video.Time=time.Now()
+	video.Time=time.Now().In(constant.CstZone)
 	video.UserId=util.GetUser(c)
 	video.Id=dao.GetIncrementId("video")
 	video.CourseId=c.PostForm("courseid")
@@ -78,7 +78,7 @@ func GetFile(c *gin.Context){
 	//if user.UserType == constant.ADMIN ||user.Id == file.UserId {
 	filetream := util.Read(file.Url)
 	defer filetream.Close()
-	http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
+	http.ServeContent(c.Writer, c.Request, file.Name, time.Now().In(constant.CstZone), filetream)
 	//}else{
 	//	c.JSON(http.StatusOK, gin.H{
 	//		"code": constant.DENIED,

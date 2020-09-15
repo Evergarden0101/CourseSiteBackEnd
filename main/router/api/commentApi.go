@@ -22,7 +22,7 @@ func AddComment(c *gin.Context){
 	}
 
 	comment.Id = dao.GetIncrementId("comment")
-	comment.Time = time.Now()
+	comment.Time = time.Now().In(constant.CstZone)
 	comment.UserId = util.GetUser(c)
 
 	dao.InsertComment(&comment)

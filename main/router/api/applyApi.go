@@ -16,10 +16,11 @@ func ApplyTeacher(c *gin.Context){
 		return
 	}
 
-	apply.Time = time.Now()
+	apply.Time = time.Now().In(constant.CstZone)
 	apply.Status = constant.NONE
 	apply.Id = dao.GetIncrementId("apply")
 	apply.UserId = util.GetUser(c)
+	apply.UserName = dao.GetUserById(apply.UserId).UserName
 	apply.Type = constant.TEACHER_JOIN
 
 	dao.InsertApply(&apply)
@@ -36,10 +37,11 @@ func ApplyCourse(c *gin.Context){
 		return
 	}
 
-	apply.Time = time.Now()
+	apply.Time = time.Now().In(constant.CstZone)
 	apply.Status = constant.NONE
 	apply.Id = dao.GetIncrementId("apply")
 	apply.UserId = util.GetUser(c)
+	apply.UserName = dao.GetUserById(apply.UserId).UserName
 	apply.Type = constant.COURSE_JOIN
 
 	dao.InsertApply(&apply)

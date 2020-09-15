@@ -21,7 +21,7 @@ func CreatePost(c *gin.Context) {
 	}
 
 	post.Id=dao.GetIncrementId("post")
-	post.Time=time.Now()
+	post.Time=time.Now().In(constant.CstZone)
 	post.UserId=util.GetUser(c)
 
 	dao.InsertPost(&post)
@@ -66,7 +66,7 @@ func DeletePost(c *gin.Context) {
 				msg.FromId=userId
 				msg.ToId=ownerId
 				msg.Detail="请注意发帖规范"
-				msg.Time=time.Now()
+				msg.Time=time.Now().In(constant.CstZone)
 				dao.InsertMessage(&msg)
 			}
 			c.JSON(http.StatusOK, gin.H{

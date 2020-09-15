@@ -1,6 +1,7 @@
 package util
 
 import (
+	"awesomeProject/main/constant"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tealeg/xlsx"
@@ -51,7 +52,7 @@ func Image(c *gin.Context){
 	if err!=nil{
 		log.Println(err)
 	}
-	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now(), file)
+	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now().In(constant.CstZone), file)
 }
 
 func ReadLog(c *gin.Context){
@@ -60,7 +61,7 @@ func ReadLog(c *gin.Context){
 	if err!=nil{
 		log.Println(err)
 	}
-	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now(), file)
+	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now().In(constant.CstZone), file)
 
 
 }

@@ -45,8 +45,7 @@ type Video struct {
 type Apply struct {
 	Id string `json:"id"`
 	UserId string `json:"userid"`
-	Title string `json:"title"`
-	Message string `json:"message"`
+	UserName string `json:"username"`
 	CourseId string `json:"courseid"`
 	ImageId string `json:"imageid"`
 	Type string `json:"type"`

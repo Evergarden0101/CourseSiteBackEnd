@@ -16,7 +16,7 @@ func SendMessage(c *gin.Context) {
 		return
 	}
 	msg.Id=dao.GetIncrementId("message")
-	msg.Time=time.Now()
+	msg.Time=time.Now().In(constant.CstZone)
 	msg.FromId=util.GetUser(c)
 	msg.Read=false
 
