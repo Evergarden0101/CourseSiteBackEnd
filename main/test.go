@@ -3,7 +3,6 @@ package main
 import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/domain"
-	"awesomeProject/main/router"
 	"awesomeProject/main/util"
 	"fmt"
 	_ "github.com/gin-gonic/gin"
@@ -36,6 +35,7 @@ func main() {
 
 	dao.InitDB()
 	fmt.Println(time.Now().In(constant.CstZone))
-	router.Run()
+	//router.Run()
+	util.AnalyzeExcel("test.xlsx")
 }
 
