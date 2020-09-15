@@ -49,12 +49,14 @@ func ImageUpload(c *gin.Context){
 	}
 
 	m:=c.Request.MultipartForm.File["image"]
-	//fmt.Println(m[0])
+
 	var file domain.File
 	file.Time = time.Now().In(constant.CstZone)
 	file.Id = dao.GetIncrementId("file")
 	file.Name = m[0].Filename
 	file.Url = util.GetUser(c)+"/"+m[0].Filename
+	file.UserId = util.GetUser(c)
+
     dao.InsertFile(&file)
 	util.Write(m[0],util.GetUser(c))
 
@@ -68,11 +70,21 @@ func ImageUpload(c *gin.Context){
 }
 
 func GetFile(c *gin.Context){
+	user := dao.GetUserById(util.GetUser(c))
+
 	var file domain.File
 	file.Id = c.Query("id")
     file = *dao.GetFileById(file.Id)
-	filetream := util.Read(file.Url)
-	defer filetream.Close()
 
-	http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
+	if user.UserType == constant.ADMIN ||user.Id == file.UserId {
+		filetream := util.Read(file.Url)
+		defer filetream.Close()
+		http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.DENIED,
+			"msg":  "没有权限",
+			"data": "",
+		})
+	}
 }

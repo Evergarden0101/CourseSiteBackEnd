@@ -67,11 +67,12 @@ func TeacherCourseAuth(c *gin.Context,courseId string)bool{
 	userId := GetUser(c)
 	user := dao.GetUserById(userId)
 	course := dao.GetCourse(courseId)
-	if user.Id != course.TeacherId{
+	scr := dao.GetSCR(courseId,userId)
+	if user.Id != course.TeacherId && scr.Type != constant.ASS{
 		log.Println(user)
 		log.Println(course)
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.ERROR,
+			"code": constant.DENIED,
 			"msg":  "没有权限",
 			"data": "",
 		})
@@ -86,7 +87,7 @@ func StudentCourseAuth(c *gin.Context,courseId string)bool{
 		log.Println(userId)
 		log.Println(courseId)
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.ERROR,
+			"code": constant.DENIED,
 			"msg":  "没有权限",
 			"data": "",
 		})

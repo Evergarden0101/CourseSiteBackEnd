@@ -48,7 +48,8 @@ type Apply struct {
 	Title string `json:"title"`
 	Message string `json:"message"`
 	CourseId string `json:"courseid"`
-	Type int `json:"type"`
+	ImageId string `json:"imageid"`
+	Type string `json:"type"`
 	Status string `json:"status"`
 	Time time.Time `json:"time"`
 }
@@ -109,5 +110,5 @@ type File struct {
 	Url string `json:"url"`
 	Time time.Time `json:"time"`
 	Name string `json:"name"`
-
+	UserId string `json:"userid"`
 }

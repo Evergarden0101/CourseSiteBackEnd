@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"awesomeProject/main/constant"
 	"awesomeProject/main/domain"
 	"context"
 	"fmt"
@@ -77,7 +78,9 @@ func GetSCRListBySid(sid string) []*domain.StudentCourseRelation{
 			log.Fatal(err)
 		}
 
-		results = append(results,&elem)
+		if elem.Type == constant.STU {
+			results = append(results, &elem)
+		}
 	}
 
 	if err := cur.Err(); err != nil {
@@ -88,4 +91,32 @@ func GetSCRListBySid(sid string) []*domain.StudentCourseRelation{
 	return results
 }
 
+func GetASSListByCid(cid string) []*domain.StudentCourseRelation{
+	collection := dataBase.Collection("studentcourserelation")
+	findOptions := options.Find()
+	var results []*domain.StudentCourseRelation
 
+	cur,err := collection.Find(context.TODO(), bson.D{{"studentid",cid}},findOptions)
+
+	if err!=nil{
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()){
+		var elem domain.StudentCourseRelation
+		err := cur.Decode(&elem)
+		if err!=nil{
+			log.Fatal(err)
+		}
+		if elem.Type == constant.ASS {
+			results = append(results, &elem)
+		}
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	cur.Close(context.TODO())
+
+	return results
+}

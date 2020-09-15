@@ -4,6 +4,7 @@ import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -11,8 +12,12 @@ import (
 func AddAssistant(c *gin.Context){
 
 	var relation domain.StudentCourseRelation
-	c.BindJSON(&relation)
-
+	if !util.BindData(c,&relation){
+		return
+	}
+	if !util.TeacherCourseAuth(c,relation.CourseId){
+		return
+	}
 	relation.Id = dao.GetIncrementId("studentcourserelation")
 	relation.Type = constant.ASS
 
@@ -25,6 +30,41 @@ func AddAssistant(c *gin.Context){
 }
 
 func GetAssistants(c *gin.Context){
+
+	var course domain.Course
+	if !util.BindData(c,&course){
+		return
+	}
+	if !util.TeacherCourseAuth(c,course.Id){
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"code": constant.ERROR,
+		"msg": "获取助教成功",
+		"data": dao.GetASSListByCid(course.Id),
+	})
+}
+
+func DeleteAssistant(c *gin.Context){
+	var relation domain.StudentCourseRelation
+	if !util.BindData(c,&relation){
+		return
+	}
+	course := dao.GetCourse(relation.CourseId)
+	if course.TeacherId == util.GetUser(c){
+		dao.DeleteSCR(relation.CourseId,relation.StudentId)
+		c.JSON(http.StatusOK,gin.H{
+			"code": constant.ERROR,
+			"msg": "删除助教成功",
+			"data": "",
+		})
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.DENIED,
+			"msg":  "没有权限",
+			"data": "",
+		})
+	}
 
 
 

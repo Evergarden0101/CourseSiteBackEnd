@@ -71,7 +71,15 @@ func Image(c *gin.Context){
 		log.Println(err)
 	}
 	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now(), file)
+}
 
+func ReadLog(c *gin.Context){
+	var file *os.File
+	file ,err:=os.Open("nohup.out")
+	if err!=nil{
+		log.Println(err)
+	}
+	http.ServeContent(c.Writer, c.Request, file.Name(), time.Now(), file)
 
 
 }

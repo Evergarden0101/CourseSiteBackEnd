@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"awesomeProject/main/constant"
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
@@ -87,6 +88,20 @@ func UpdateUser(user *domain.User){
 			{"email", user.Email},
 			{"password",user.Password},
 			{"phone",user.Phone},
+		}},
+	}
+	updateResult, err := collection.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(updateResult)
+}
+func UpdateUserType(id string){
+	collection := dataBase.Collection("user")
+	filter := bson.D{{"id", id}}
+	update := bson.D{
+		{"$set", bson.D{
+			{"usertype", constant.TEACHER},
 		}},
 	}
 	updateResult, err := collection.UpdateOne(context.TODO(), filter, update)
