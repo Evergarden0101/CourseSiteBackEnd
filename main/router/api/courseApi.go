@@ -301,6 +301,23 @@ func SetRule(c *gin.Context){
 	}
 }
 
+func IsInCourse(c *gin.Context){
+	type jsonData struct {
+		Cid string `json:"courseid"`
+		Sid string `json:"studentid"`
+	}
+	var json jsonData
+	if !util.BindData(c, &json){
+		return
+	}
+	scr := dao.GetSCR(json.Cid,json.Sid)
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"",
+		"data":scr,
+	})
+}
+
 func sortCourse(list []*domain.Course){
 	for i:=0;i<len(list);i++{
 		for j:=1;j<len(list);j++{

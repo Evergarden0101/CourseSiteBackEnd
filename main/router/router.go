@@ -85,6 +85,7 @@ func Run(){
 	r.POST("/api/deletecourse",util.JWTAuth(),api.DeleteCourseById)
 	r.POST("/api/getTeacherCourse",util.JWTAuth(),api.GetTeacherCourse)
 	r.POST("/api/getCircles",util.JWTAuth(),api.GetCircles)
+	r.POST("/api/isInCourse",util.JWTAuth(),api.IsInCourse)
 
 	//视频接口
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
