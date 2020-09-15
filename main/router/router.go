@@ -45,7 +45,12 @@ func Run(){
 	r := gin.Default()
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
 
-
+	//申请接口
+	r.POST("/api/applyTeacher",util.JWTAuth(),api.ApplyTeacher)
+	r.POST("/api/applyCourse",util.JWTAuth(),api.ApplyCourse)
+	r.POST("/api/getTeacherApply",util.JWTAuth(),api.GetApplyByAdmin)
+	r.POST("/api/getCourseApply",util.JWTAuth(),api.GetApplyByCourse)
+	r.POST("/api/dealApply",util.JWTAuth(),api.DealApply)
 
 	//评论接口
 	r.POST("/api/getcomments",util.JWTAuth(),api.GetComments)

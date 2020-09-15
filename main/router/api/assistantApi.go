@@ -46,6 +46,7 @@ func GetAssistants(c *gin.Context){
 }
 
 func DeleteAssistant(c *gin.Context){
+
 	var relation domain.StudentCourseRelation
 	if !util.BindData(c,&relation){
 		return
@@ -65,7 +66,4 @@ func DeleteAssistant(c *gin.Context){
 			"data": "",
 		})
 	}
-
-
-
 }

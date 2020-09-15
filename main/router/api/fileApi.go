@@ -41,7 +41,6 @@ func FileUpload(c *gin.Context) {
 }
 
 func ImageUpload(c *gin.Context){
-
 	err :=c.Request.ParseMultipartForm(100000)
 	if err !=nil{
 		http.Error(c.Writer,err.Error(),http.StatusInternalServerError)
@@ -59,7 +58,7 @@ func ImageUpload(c *gin.Context){
 
     dao.InsertFile(&file)
 	util.Write(m[0],util.GetUser(c))
-
+    file.Url = constant.IMAGE_PATH+file.Id
 	c.JSON(http.StatusOK,gin.H{
 		"code":constant.SUCCESS,
 		"msg":"上传成功",
@@ -70,21 +69,21 @@ func ImageUpload(c *gin.Context){
 }
 
 func GetFile(c *gin.Context){
-	user := dao.GetUserById(util.GetUser(c))
+	//user := dao.GetUserById(util.GetUser(c))
 
 	var file domain.File
 	file.Id = c.Query("id")
     file = *dao.GetFileById(file.Id)
 
-	if user.UserType == constant.ADMIN ||user.Id == file.UserId {
-		filetream := util.Read(file.Url)
-		defer filetream.Close()
-		http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
-	}else{
-		c.JSON(http.StatusOK, gin.H{
-			"code": constant.DENIED,
-			"msg":  "没有权限",
-			"data": "",
-		})
-	}
+	//if user.UserType == constant.ADMIN ||user.Id == file.UserId {
+	filetream := util.Read(file.Url)
+	defer filetream.Close()
+	http.ServeContent(c.Writer, c.Request, file.Name, time.Now(), filetream)
+	//}else{
+	//	c.JSON(http.StatusOK, gin.H{
+	//		"code": constant.DENIED,
+	//		"msg":  "没有权限",
+	//		"data": "",
+	//	})
+	//}
 }
