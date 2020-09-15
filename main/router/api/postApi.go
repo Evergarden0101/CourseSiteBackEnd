@@ -40,23 +40,35 @@ func DeletePost(c *gin.Context) {
 	}
 	var postId PostId
 	var userId string =util.GetUser(c)
+
 	if !util.BindData(c,&postId){
 		return
 	}
 
 	var post *domain.Post
 	post=dao.GetPostById(postId.Id)
+	var teacherId string =dao.GetCourse(post.CourseId).TeacherId
+	var ownerId string=post.UserId
 	//是否为发帖人或为负责教师删除
 	if((post.UserId!=userId)&&(dao.GetCourse(post.CourseId).TeacherId!=userId)){
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.DENIED,
 				"msg":  "无删除权限",
-				"data": "",
+				"data": post,
 			})
 	}else{
 		if (dao.DropPostById(postId.Id)){
 			postlist:=dao.GetPostByCourseId(post.CourseId)
 			sortPost(postlist)
+			if(userId==teacherId){
+				var msg domain.Message
+				msg.Id=dao.GetIncrementId("message")
+				msg.FromId=userId
+				msg.ToId=ownerId
+				msg.Detail="请注意发帖规范"
+				msg.Time=time.Now()
+				dao.InsertMessage(&msg)
+			}
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.SUCCESS,
 				"msg":  "成功删除",
