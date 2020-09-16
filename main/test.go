@@ -34,6 +34,5 @@ func main() {
 
 	dao.InitDB()
 	router.Run()
-	//util.AnalyzeExcel("test.xlsx")
 }
 

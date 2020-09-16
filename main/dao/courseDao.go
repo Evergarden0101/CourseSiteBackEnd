@@ -69,7 +69,7 @@ func GetCourseListByStudentId(sid string) []*domain.Course{
 	len:= len(SCRlist)
 	var elem domain.Course
 	for i:=0;i<len;i++{
-		collection.FindOne(context.TODO(),bson.D{{"courseid",SCRlist[i].CourseId}}).Decode(&elem)
+		collection.FindOne(context.TODO(),bson.D{{"id",SCRlist[i].CourseId}}).Decode(&elem)
 		result = append(result,&elem)
 	}
 	return result

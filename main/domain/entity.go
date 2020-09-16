@@ -27,7 +27,8 @@ type Course struct {
 type StudentCourseRelation struct {
 	Id string `json:"id"`
 	StudentId string `json:"studentid"`
-	CourseId string `json:"courseId"`
+	StudentName string `json:"studentname"`
+	CourseId string `json:"courseid"`
 	Type int `json:"type"`
 }
 

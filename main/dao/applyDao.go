@@ -48,6 +48,17 @@ func GetApplyById(id string)*domain.Apply{
 	return &apply
 }
 
+func GetApplyByCourseId(cid string,sid string)*domain.Apply{
+	collection := dataBase.Collection("studentcourserelation")
+	var scr domain.Apply
+	d := bson.M{
+		"userid":sid,
+		"courseid":cid,
+	}
+	collection.FindOne(context.TODO(),d).Decode(&scr)
+	return &scr
+}
+
 func UpdateApply(apply *domain.Apply){
 	collection := dataBase.Collection("apply")
 	filter := bson.D{{"id", apply.Id}}

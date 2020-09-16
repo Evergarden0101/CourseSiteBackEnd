@@ -40,8 +40,6 @@ func CreateCourse(c *gin.Context){
 }
 
 func DeleteCourseById(c *gin.Context){
-
-
 	var course domain.Course
 	if !util.BindData(c,&course){
 		return
@@ -58,7 +56,7 @@ func DeleteCourseById(c *gin.Context){
 		})
 	}else{
 		c.JSON(http.StatusOK,gin.H{
-			"code":constant.SUCCESS,
+			"code":constant.ERROR,
 			"msg":"删除课程失败",
 			"data":"",
 		})
@@ -66,9 +64,39 @@ func DeleteCourseById(c *gin.Context){
 
 }
 
+func AddMore(c *gin.Context){
+	err :=c.Request.ParseMultipartForm(100000)
+	if err !=nil{
+		http.Error(c.Writer,err.Error(),http.StatusInternalServerError)
+		return
+	}
+	m:=c.Request.MultipartForm.File["file"]
+	courseId := c.PostForm("courseid")
+	util.Write(m[0],util.GetUser(c))
+	var scrList []*domain.StudentCourseRelation
+    userList := util.AnalyzeExcel(util.GetUser(c)+"/"+m[0].Filename)
+    for _,v := range userList{
+    	if (dao.CheckId(v.Id))||dao.GetSCRById(courseId,v.Id){
+    		continue
+		}
+		scr := domain.StudentCourseRelation{}
+		scr.CourseId = courseId
+		scr.StudentId = v.Id
+		scr.Id = dao.GetIncrementId("studentcourserelation")
+		scr.Type = constant.STU
+		dao.AddOneSCRelation(&scr)
+		scrList = append(scrList,&scr)
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"批量导入成功",
+		"data":scrList,
+	})
+}
+
 //把学生批量拉入课程中
 //需要传入的是课程id和学生id数组,其中学生id数组是以逗号隔开的
-func IncludeStudents(c *gin.Context){
+func AddStudent(c *gin.Context){
 	type jsonData struct{
 		Cid string `json:"courseid"`
 		Sid string `json:"studentid"`
@@ -131,11 +159,11 @@ func DeleteStudent(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.SUCCESS,
 				"msg":  "已成功把该学生移出课程",
-				"data": "",
+				"data": dao.GetSCRListByCid(json.Cid),
 			})
 		} else {
 			c.JSON(http.StatusOK, gin.H{
-				"code": constant.SUCCESS,
+				"code": constant.ERROR,
 				"msg":  "把学生移除课程失败，该学生id为" + json.Sid,
 				"data": "",
 			})
@@ -304,17 +332,43 @@ func SetRule(c *gin.Context){
 func IsInCourse(c *gin.Context){
 	type jsonData struct {
 		Cid string `json:"courseid"`
-		Sid string `json:"studentid"`
 	}
 	var json jsonData
 	if !util.BindData(c, &json){
 		return
 	}
-	scr := dao.GetSCR(json.Cid,json.Sid)
+
+	var result int
+	result = 0
+	if(dao.GetSCRById(json.Cid,util.GetUser(c))){
+		result = 2
+	}else if(dao.GetApplyByCourseId(json.Cid,util.GetUser(c)).Status == constant.NONE) {
+		result =1
+	}
+
 	c.JSON(http.StatusOK,gin.H{
 		"code":constant.SUCCESS,
 		"msg":"",
-		"data":scr,
+		"data":result,
+	})
+}
+
+func GetAllRelation(c *gin.Context){
+
+	type jsonData struct{
+		Cid string `json:"cid"`
+	}
+	var json jsonData
+	if !util.BindData(c, &json) {
+		return
+	}
+	if !util.TeacherCourseAuth(c,json.Cid){
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"code":constant.SUCCESS,
+		"msg":"",
+		"data":dao.GetSCRListByCid(json.Cid),
 	})
 }
 

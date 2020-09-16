@@ -88,10 +88,27 @@ func GetApplyByAdmin(c *gin.Context){
 	list := dao.GetApplysByType(constant.TEACHER_JOIN)
 
 	sortApply(list)
+
+	type result struct {
+		Id string `json:"id"`
+		UserId string `json:"userid"`
+		UserName string `json:"username"`
+		ImageUrl []string `json:"imageurl"`
+	}
+	var resultList []*result
+
+	for _,v := range list{
+		result1 := result{}
+		result1.Id = v.Id
+		result1.UserName = v.UserName
+		result1.UserId = v.UserId
+		result1.ImageUrl = append(result1.ImageUrl,constant.IMAGE_PATH+v.ImageId)
+		resultList = append(resultList,&result1)
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"code": constant.SUCCESS,
 		"msg":  "获取申请列表成功",
-		"data": list,
+		"data": resultList,
 	})
 }
 
@@ -156,18 +173,17 @@ func GetApply(c *gin.Context){
 func DealApply(c *gin.Context){
 
 	type jsonData struct {
-		applyId string
-		dealReuslt int
-		courseId string
+		ApplyId string `json:"applyid"`
+		Reuslt int `json:"result"`
 	}
 
 	var json jsonData
 	if !util.BindData(c,&json){
 		return
 	}
-	apply := dao.GetApplyById(json.applyId)
+	apply := dao.GetApplyById(json.ApplyId)
 	if util.AdminAuth(c) && apply.Type == constant.TEACHER_JOIN{
-		if json.dealReuslt == 1{
+		if json.Reuslt == 1{
 			dao.UpdateUserType(apply.UserId)
 			apply.Status = constant.AGREE
 		}else{
@@ -181,7 +197,7 @@ func DealApply(c *gin.Context){
 		})
 		return
 	}else if util.TeacherCourseAuth(c,apply.CourseId) && apply.Type == constant.COURSE_JOIN{
-		if json.dealReuslt == 1{
+		if json.Reuslt == 1{
 
 			var scr domain.StudentCourseRelation
 			scr.CourseId = apply.CourseId
@@ -198,7 +214,7 @@ func DealApply(c *gin.Context){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "审核成功",
-			"data": "",
+			"data": dao.GetSCRListByCid(apply.CourseId),
 		})
 		return
 	}else{

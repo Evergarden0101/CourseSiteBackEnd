@@ -2,7 +2,7 @@ package util
 
 import (
 	"awesomeProject/main/constant"
-	"fmt"
+	"awesomeProject/main/domain"
 	"github.com/gin-gonic/gin"
 	"github.com/tealeg/xlsx"
 	"io"
@@ -67,38 +67,28 @@ func ReadLog(c *gin.Context){
 }
 
 //解析一个学号+姓名的表
-func AnalyzeExcel(path string) [1000][2]string{
+func AnalyzeExcel(path string) []domain.User{
 	xlFile, err:= xlsx.OpenFile(path)
 	if(err!=nil){
 		log.Println(err)
 	}
-
-
-	var result [1000][2] string
-
-
+    var userList []domain.User
 	for _,sheet := range xlFile.Sheets {
 		for rowIndex, row := range sheet.Rows {
 			if (rowIndex > 0) {
+				user := domain.User{}
 				if len(row.Cells) <2{
 					break
 				}
-				for cellIndex, cell := range row.Cells {
-					text := cell.String()
-					if(len(text)==0){
-						break
-					}
-					result[rowIndex-1][cellIndex] = text
+				user.UserName = row.Cells[0].String()
+				user.Id = row.Cells[1].String()
+				if(len(user.UserName) ==0){
+					return userList
 				}
+				userList = append(userList,user)
 			}
 		}
 		break
 	}
-
-	for i:=0;i<3;i++{
-		fmt.Println(result[i][0]+result[i][1])
-	}
-
-	return result
-
+	return userList
 }

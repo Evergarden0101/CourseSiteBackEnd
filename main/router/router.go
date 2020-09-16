@@ -46,6 +46,11 @@ func Run(){
 	r := gin.Default()
 	r.Use(NewrelicMiddleware("GoTest", "9eacdfcf41c66bfc64e9c533127f9159b0feNRAL"))
 
+	//助教接口
+	r.POST("/api/addAssistant",util.JWTAuth(),api.AddAssistant)
+	r.POST("/api/deleteAssistant",util.JWTAuth(),api.DeleteAssistant)
+	r.POST("/api/addMoreStudent",util.JWTAuth(),api.AddMore)
+
 	//申请接口
 	r.POST("/api/applyTeacher",util.JWTAuth(),api.ApplyTeacher)
 	r.POST("/api/applyCourse",util.JWTAuth(),api.ApplyCourse)
@@ -76,8 +81,8 @@ func Run(){
 
 	//课程接口
 	r.POST("/api/createcourse",util.JWTAuth(),api.CreateCourse)
-	r.POST("/api/includestudents",util.JWTAuth(),api.IncludeStudents)
-	r.POST("/api/deletestudents",util.JWTAuth(),api.DeleteStudent)
+	r.POST("/api/addStudent",util.JWTAuth(),api.AddStudent)
+	r.POST("/api/deleteStudent",util.JWTAuth(),api.DeleteStudent)
 	r.POST("/api/getStudentCourse",util.JWTAuth(),api.GetStudentCourses)
 	r.POST("/api/getallCourse",util.JWTAuth(),api.GetAllCourse)
 	r.POST("/api/setdetail",util.JWTAuth(),api.SetDetail)
@@ -86,6 +91,7 @@ func Run(){
 	r.POST("/api/getTeacherCourse",util.JWTAuth(),api.GetTeacherCourse)
 	r.POST("/api/getCircles",util.JWTAuth(),api.GetCircles)
 	r.POST("/api/isInCourse",util.JWTAuth(),api.IsInCourse)
+	r.POST("/api/getAllRelations",util.JWTAuth(),api.GetAllRelation)
 
 	//视频接口
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)

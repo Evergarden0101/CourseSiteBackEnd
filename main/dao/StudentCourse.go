@@ -13,6 +13,7 @@ import (
 //增
 //只插入一条
 func AddOneSCRelation(r *domain.StudentCourseRelation){
+	r.StudentName = GetUserById(r.StudentId).UserName
 	collection := dataBase.Collection("studentcourserelation")
 	collection.InsertOne(context.TODO(),r)
 }
@@ -81,6 +82,35 @@ func GetSCRListBySid(sid string) []*domain.StudentCourseRelation{
 		if elem.Type == constant.STU {
 			results = append(results, &elem)
 		}
+	}
+
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+	cur.Close(context.TODO())
+
+	return results
+}
+
+func GetSCRListByCid(cid string) []*domain.StudentCourseRelation{
+	collection := dataBase.Collection("studentcourserelation")
+	findOptions := options.Find()
+	var results []*domain.StudentCourseRelation
+
+	cur,err := collection.Find(context.TODO(), bson.D{{"courseid",cid}},findOptions)
+
+	if err!=nil{
+		log.Fatal(err)
+	}
+
+	for cur.Next(context.TODO()){
+		var elem domain.StudentCourseRelation
+		err := cur.Decode(&elem)
+		if err!=nil{
+			log.Fatal(err)
+		}
+
+		results = append(results, &elem)
 	}
 
 	if err := cur.Err(); err != nil {
