@@ -98,6 +98,7 @@ type Message struct {
 	Detail string `json:"detail"`
 	Read bool `json:"read"`
 	Time time.Time `json:"time"`
+	TimeString string `json:"timestring"`
 }
 
 type Like struct {

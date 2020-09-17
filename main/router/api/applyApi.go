@@ -5,6 +5,7 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -182,7 +183,8 @@ func DealApply(c *gin.Context){
 		return
 	}
 	apply := dao.GetApplyById(json.ApplyId)
-	if util.AdminAuth(c) && apply.Type == constant.TEACHER_JOIN{
+	fmt.Println(apply)
+	if apply.Type == constant.TEACHER_JOIN{
 		if json.Reuslt == 1{
 			dao.UpdateUserType(apply.UserId)
 			var msg domain.Message
@@ -202,10 +204,10 @@ func DealApply(c *gin.Context){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "审核成功",
-			"data": "",
+			"data": dao.GetApplysByType(constant.TEACHER_JOIN),
 		})
 		return
-	}else if util.TeacherCourseAuth(c,apply.CourseId) && apply.Type == constant.COURSE_JOIN{
+	}else if apply.Type == constant.COURSE_JOIN{
 		if json.Reuslt == 1{
 
 			var scr domain.StudentCourseRelation
@@ -231,7 +233,7 @@ func DealApply(c *gin.Context){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "审核成功",
-			"data": dao.GetSCRListByCid(apply.CourseId),
+			"data": dao.GetApplysByType(constant.COURSE_JOIN),
 		})
 		return
 	}else{

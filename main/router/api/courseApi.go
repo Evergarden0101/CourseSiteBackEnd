@@ -82,6 +82,7 @@ func AddMore(c *gin.Context){
 		scr := domain.StudentCourseRelation{}
 		scr.CourseId = courseId
 		scr.StudentId = v.Id
+		scr.StudentName = v.UserName
 		scr.Id = dao.GetIncrementId("studentcourserelation")
 		scr.Type = constant.STU
 		dao.AddOneSCRelation(&scr)

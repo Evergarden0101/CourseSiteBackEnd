@@ -16,9 +16,9 @@ func CreatePost(c *gin.Context) {
 	if !util.BindData(c,&post){
 		return
 	}
-	if !util.TeacherCourseAuth(c,post.CourseId)&&!util.StudentCourseAuth(c,post.CourseId){
-		return
-	}
+	//if !util.TeacherCourseAuth(c,post.CourseId)&&!util.StudentCourseAuth(c,post.CourseId){
+	//	return
+	//}
 
 	post.Id=dao.GetIncrementId("post")
 	post.Time=time.Now().In(constant.CstZone)

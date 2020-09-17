@@ -17,6 +17,7 @@ func SendMessage(c *gin.Context) {
 	}
 	msg.Id=dao.GetIncrementId("message")
 	msg.Time=time.Now().In(constant.CstZone)
+	msg.TimeString = msg.Time.Format("2006-01-02 15:04:05")
 	msg.FromId=util.GetUser(c)
 	msg.Read=false
 
@@ -42,7 +43,7 @@ func FindMessageByUser(c *gin.Context) {
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.ERROR,
 			"msg":  "暂无私信",
 			"data": "",
 		})
@@ -61,7 +62,7 @@ func GetSumUnreadMessage(c *gin.Context){
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
-			"code": constant.SUCCESS,
+			"code": constant.ERROR,
 			"msg":  "暂无私信",
 			"data": "",
 		})
@@ -78,8 +79,10 @@ func ReadMessage(c *gin.Context) {
 	}
 
 	touserid:=util.GetUser(c)
-	list:=dao.GetMessageByToUserId(touserid)
+
 	if dao.ModifyReadById(id.Id){
+		list:=dao.GetMessageByToUserId(touserid)
+		sortMessage(list)
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "已阅成功",

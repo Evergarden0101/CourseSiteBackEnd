@@ -8,6 +8,7 @@ import (
 	"fmt"
 	_ "github.com/gin-gonic/gin"
 	_ "github.com/newrelic/go-agent"
+	"time"
 )
 import "awesomeProject/main/dao"
 
@@ -34,10 +35,8 @@ func main() {
 
 
 	dao.InitDB()
-	var list []string
-	list = append(list,"01:23")
-	list = append(list,"03:33")
-	fmt.Println(util.SumTime(list))
+	now := time.Now().In(constant.CstZone)
+	fmt.Println(now.Format("2006-01-02 15:04:05"))
 	router.Run()
 }
 

@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"awesomeProject/main/constant"
 	"awesomeProject/main/domain"
 	"context"
 	"fmt"
@@ -25,7 +26,9 @@ func GetApplysByType(applyType string)[]*domain.Apply{
 		if err != nil {
 			log.Fatal(err)
 		}
-		results = append(results, &elem)
+		if(elem.Status == constant.NONE) {
+			results = append(results, &elem)
+		}
 	}
 
 	if err := cur.Err(); err != nil {

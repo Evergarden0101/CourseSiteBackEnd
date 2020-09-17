@@ -25,7 +25,7 @@ const (
 const(
 	TEACHER_JOIN = "TEACHER_JOIN"
 	COURSE_JOIN = "COURSE_JOIN"
-	IMAGE_PATH = "http://localhost:8080/api/getimage?id="
+	IMAGE_PATH = "http://10.251.253.31:8080/api/getimage?id="
 )
 //审核结果
 const(
