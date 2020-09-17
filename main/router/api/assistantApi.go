@@ -57,6 +57,10 @@ func DeleteAssistant(c *gin.Context){
 	course := dao.GetCourse(relation.CourseId)
 	if course.TeacherId == util.GetUser(c){
 		dao.DeleteSCR(relation.CourseId,relation.StudentId)
+		relation.Id = dao.GetIncrementId("studentcourserelation")
+		relation.Type = constant.STU
+
+		dao.AddOneSCRelation(&relation)
 		c.JSON(http.StatusOK,gin.H{
 			"code": constant.SUCCESS,
 			"msg": "删除助教成功",

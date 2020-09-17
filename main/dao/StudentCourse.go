@@ -78,10 +78,7 @@ func GetSCRListBySid(sid string) []*domain.StudentCourseRelation{
 		if err!=nil{
 			log.Fatal(err)
 		}
-
-		if elem.Type == constant.STU {
-			results = append(results, &elem)
-		}
+		results = append(results, &elem)
 	}
 
 	if err := cur.Err(); err != nil {
