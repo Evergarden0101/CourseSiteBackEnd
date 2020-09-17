@@ -39,7 +39,6 @@ func GetApplysByType(applyType string)[]*domain.Apply{
 func GetApplyById(id string)*domain.Apply{
 	collection := dataBase.Collection("apply")
 	var apply domain.Apply
-
 	d := bson.D{{
 		"id",id,
 	}}
@@ -49,7 +48,7 @@ func GetApplyById(id string)*domain.Apply{
 }
 
 func GetApplyByCourseId(cid string,sid string)*domain.Apply{
-	collection := dataBase.Collection("studentcourserelation")
+	collection := dataBase.Collection("apply")
 	var scr domain.Apply
 	d := bson.M{
 		"userid":sid,

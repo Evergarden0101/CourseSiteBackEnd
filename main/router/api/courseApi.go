@@ -340,10 +340,12 @@ func IsInCourse(c *gin.Context){
 
 	var result int
 	result = 0
-	if(dao.GetSCRById(json.Cid,util.GetUser(c))){
-		result = 2
+	if(dao.GetSCR(json.Cid,util.GetUser(c)).Type == constant.ASS || dao.GetCourse(json.Cid).TeacherId == util.GetUser(c)){
+		result = 3
 	}else if(dao.GetApplyByCourseId(json.Cid,util.GetUser(c)).Status == constant.NONE) {
-		result =1
+		result = 1
+	}else if(dao.GetSCR(json.Cid,util.GetUser(c)).Type == constant.STU){
+		result = 2
 	}
 
 	c.JSON(http.StatusOK,gin.H{

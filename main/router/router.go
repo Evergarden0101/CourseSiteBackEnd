@@ -103,6 +103,7 @@ func Run(){
 	r.POST("/api/sendmessage",util.JWTAuth(),api.SendMessage)
 	r.POST("/api/receivemessage",util.JWTAuth(),api.FindMessageByUser)
 	r.POST("/api/readmessage",util.JWTAuth(),api.ReadMessage)
+	r.POST("/api/getmessagenum",util.JWTAuth(),api.GetSumUnreadMessage)
 
 	r.POST("/api/imageupload",util.JWTAuth(),api.ImageUpload)
 	r.GET("/api/getimage",api.GetFile)

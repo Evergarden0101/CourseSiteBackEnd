@@ -30,21 +30,34 @@ func SendMessage(c *gin.Context) {
 
 
 func FindMessageByUser(c *gin.Context) {
-	//type jsonData struct {
-	//	toId string `json:"toid"`
-	//}
-	//var touserid jsonData
-	//if !util.BindData(c,&touserid){
-	//	return
-	//}
 	touserid:=util.GetUser(c)
 	list:=dao.GetMessageByToUserId(touserid)
 	sortMessage(list)
+
 	if len(list)>0{
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "成功返回",
 			"data": list,
+		})
+	}else{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  "暂无私信",
+			"data": "",
+		})
+	}
+}
+
+func GetSumUnreadMessage(c *gin.Context){
+	touserid:=util.GetUser(c)
+	list:=dao.GetMessageByToUserId(touserid)
+
+	if len(list)>0{
+		c.JSON(http.StatusOK, gin.H{
+			"code": constant.SUCCESS,
+			"msg":  "成功返回",
+			"data": unreadMessageNum(list),
 		})
 	}else{
 		c.JSON(http.StatusOK, gin.H{
@@ -63,11 +76,14 @@ func ReadMessage(c *gin.Context) {
 	if !util.BindData(c,&id){
 		return
 	}
+
+	touserid:=util.GetUser(c)
+	list:=dao.GetMessageByToUserId(touserid)
 	if dao.ModifyReadById(id.Id){
 		c.JSON(http.StatusOK, gin.H{
 			"code": constant.SUCCESS,
 			"msg":  "已阅成功",
-			"data": unreadMessageNum(dao.GetMessageByToUserId(dao.GetMessageById(id.Id).ToId)),
+			"data": list,
 		})
 	} else{
 		c.JSON(http.StatusOK, gin.H{

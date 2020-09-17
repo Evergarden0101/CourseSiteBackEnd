@@ -86,6 +86,7 @@ type Message struct {
 	Id string `json:"id"`
 	FromId string `json:"fromid"`
 	ToId string `json:"toid"`
+	Topic string `json:"topic"`
 	Detail string `json:"detail"`
 	Read bool `json:"read"`
 	Time time.Time `json:"time"`

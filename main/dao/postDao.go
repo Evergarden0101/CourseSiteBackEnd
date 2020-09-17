@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 )
@@ -106,6 +107,7 @@ func UpdatePostIsTopById(id string)bool  {
 		"id",id,
 	}}
 	istop:=!(GetPostById(id).IsTop)
+	fmt.Println(istop)
 	update := bson.D{
 		{"$set",bson.D{
 			{"istop",istop},

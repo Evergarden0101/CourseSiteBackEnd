@@ -42,7 +42,7 @@ func GetAssistants(c *gin.Context){
 		return
 	}
 	c.JSON(http.StatusOK,gin.H{
-		"code": constant.ERROR,
+		"code": constant.SUCCESS,
 		"msg": "获取助教成功",
 		"data": dao.GetASSListByCid(course.Id),
 	})

@@ -185,6 +185,15 @@ func DealApply(c *gin.Context){
 	if util.AdminAuth(c) && apply.Type == constant.TEACHER_JOIN{
 		if json.Reuslt == 1{
 			dao.UpdateUserType(apply.UserId)
+			var msg domain.Message
+			msg.Id=dao.GetIncrementId("message")
+			msg.Topic="审核成功"
+			msg.FromId=util.GetUser(c)
+			msg.ToId=apply.UserId
+			msg.Detail="您已成为教师"
+			msg.Read = false
+			msg.Time=time.Now().In(constant.CstZone)
+			dao.InsertMessage(&msg)
 			apply.Status = constant.AGREE
 		}else{
 			apply.Status = constant.DISAGREE
@@ -205,7 +214,15 @@ func DealApply(c *gin.Context){
 			scr.Id = dao.GetIncrementId("studentcourserelation")
 			scr.Type = constant.STU
 			dao.AddOneSCRelation(&scr)
-
+			var msg domain.Message
+			msg.Id=dao.GetIncrementId("message")
+			msg.Topic="审核成功"
+			msg.FromId=util.GetUser(c)
+			msg.ToId=apply.UserId
+			msg.Detail="您已加入课程"
+			msg.Read = false
+			msg.Time=time.Now().In(constant.CstZone)
+			dao.InsertMessage(&msg)
 			apply.Status = constant.AGREE
 		}else{
 			apply.Status = constant.DISAGREE

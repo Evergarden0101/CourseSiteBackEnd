@@ -63,8 +63,10 @@ func DeletePost(c *gin.Context) {
 			if(userId==teacherId){
 				var msg domain.Message
 				msg.Id=dao.GetIncrementId("message")
+				msg.Topic="您的贴子被删除"
 				msg.FromId=userId
 				msg.ToId=ownerId
+				msg.Read = false
 				msg.Detail="请注意发帖规范"
 				msg.Time=time.Now().In(constant.CstZone)
 				dao.InsertMessage(&msg)
