@@ -110,8 +110,8 @@ func FindPostByUser(c *gin.Context) {
 			"data": "",
 		})
 	}
-
 }
+
 func FindPostByCourse(c *gin.Context) {
 	type jsonData struct {
 		Id string `json:"id"`
@@ -209,10 +209,12 @@ func ChangePostIstop(c *gin.Context) {
 	}else{
 		ans:=dao.UpdatePostIsTopById(postid.Id)
 		if ans{
+			list:=dao.GetPostByCourseId(dao.GetPostById(postid.Id).CourseId)
+			sortPost(list)
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.SUCCESS,
 				"msg":  "操作成功",
-				"data": dao.GetPostById(postid.Id),
+				"data": list,
 			})
 		}else{
 			c.JSON(http.StatusOK, gin.H{
@@ -244,10 +246,12 @@ func ChangePostIselite(c *gin.Context) {
 	}else{
 		ans:=dao.UpdatePostIsEliteById(postid.Id)
 		if ans{
+			list:=dao.GetPostByCourseId(dao.GetPostById(postid.Id).CourseId)
+			sortPost(list)
 			c.JSON(http.StatusOK, gin.H{
 				"code": constant.SUCCESS,
 				"msg":  "操作成功",
-				"data": dao.GetPostById(postid.Id),
+				"data": list,
 			})
 		}else{
 			c.JSON(http.StatusOK, gin.H{
@@ -261,9 +265,9 @@ func ChangePostIselite(c *gin.Context) {
 }
 
 func sortPost(list []*domain.Post)  {
-	for i:=0;i<len(list);i++{
-		for j:=1;j<len(list);j++{
-			if list[j-1].Time.Before(list[j].Time){
+	for i:=0;i<len(list)-1;i++{
+		for j:=len(list)-1;j>i;j--{
+			if (list[j-1].IsTop==false && list[j].IsTop==true)||((list[j-1].IsTop==list[j].IsTop)&&(list[j-1].IsElite==false && list[j].IsElite==true))||((((list[j-1].IsTop==list[j].IsTop)&&(list[j-1].IsElite==list[j].IsElite)))&&list[j-1].Time.Before(list[j].Time)){
 				post := list[j-1]
 				list[j-1] = list[j]
 				list[j] = post
@@ -271,4 +275,3 @@ func sortPost(list []*domain.Post)  {
 		}
 	}
 }
-

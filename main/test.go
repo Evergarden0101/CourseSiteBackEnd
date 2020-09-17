@@ -3,6 +3,7 @@ package main
 import (
 	"awesomeProject/main/constant"
 	"awesomeProject/main/domain"
+	"awesomeProject/main/router"
 	"awesomeProject/main/util"
 	"fmt"
 	_ "github.com/gin-gonic/gin"
@@ -37,6 +38,6 @@ func main() {
 	list = append(list,"01:23")
 	list = append(list,"03:33")
 	fmt.Println(util.SumTime(list))
-	//router.Run()
+	router.Run()
 }
 
