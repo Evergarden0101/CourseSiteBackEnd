@@ -32,6 +32,14 @@ type StudentCourseRelation struct {
 	Type int `json:"type"`
 }
 
+type StudentVedioRelation struct {
+	Id string `json:"id"`
+	StudentId string `json:"studentid"`
+	StudentName string `json:"studentname"`
+	CourseId string `json:"courseid"`
+	Type int `json:"type"`
+}
+
 type Video struct {
 	Id string `json:"id"`
 	CourseId string `json:"courseid"`
