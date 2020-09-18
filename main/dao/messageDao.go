@@ -8,6 +8,7 @@ import (
 )
 
 func InsertMessage(comment *domain.Message){
+	comment.TimeString = comment.Time.Format("2006-01-02 15:04:05")
 	collection := dataBase.Collection("message")
 	collection.InsertOne(context.TODO(),comment)
 }
