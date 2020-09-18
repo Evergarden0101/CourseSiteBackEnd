@@ -93,10 +93,14 @@ func Run(){
 	r.POST("/api/isInCourse",util.JWTAuth(),api.IsInCourse)
 	r.POST("/api/getAllRelations",util.JWTAuth(),api.GetAllRelation)
 
+	//学生视频关系
+	r.POST("/api/setwatchtime",util.JWTAuth(),api.SetWatchTime)
+	r.POST("/api/getwatchtime",util.JWTAuth(),api.GetWatchTime)
+
 	//视频接口
 	r.POST("/api/getvideos",util.JWTAuth(),api.GetVideos)
 	r.POST("/api/deletevideo",util.JWTAuth(),api.DeleteVideo)
-	r.GET("/api/getvideostream",api.GetVideoStream)
+	r.GET("/api/getvideostream",util.JWTAuth(),api.GetVideoStream)
 	r.POST("/api/fileupload",util.JWTAuth(),api.FileUpload)
 
 	//私信接口

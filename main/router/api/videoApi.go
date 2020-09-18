@@ -6,6 +6,7 @@ import (
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"time"
 )
@@ -74,9 +75,21 @@ func GetVideoStream(c *gin.Context)  {
 	json.Id = c.Query("id")
 	video := dao.GetVideoById(json.Id)
 
+	log.Println(json.Id)
 
 	videostream := util.Read(video.Path)
 	defer videostream.Close()
 
+	if(len(dao.GetSVRelation(util.GetUser(c),json.Id))==0){
+		var SVR domain.StudentVideoRelation
+		SVR.StudentId=util.GetUser(c)
+		SVR.VideoId=json.Id
+		SVR.Id=dao.GetIncrementId("studentvideorelation")
+		SVR.WatchTime=0.0
+		SVR.LastWatch=time.Now()
+		dao.InsertStudentVideoRelation(&SVR)
+	}
+
 	http.ServeContent(c.Writer, c.Request, json.Id+".mp4", time.Now().In(constant.CstZone), videostream)
+
 }
