@@ -57,6 +57,7 @@ func GetSCR(cid string,sid string)*domain.StudentCourseRelation{
 		"courseid":cid,
 	}
 	collection.FindOne(context.TODO(),d).Decode(&scr)
+	fmt.Println(scr)
 	return &scr
 }
 
