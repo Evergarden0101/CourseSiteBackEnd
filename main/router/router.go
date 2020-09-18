@@ -38,7 +38,6 @@ func ServeHTTP(c *gin.Context) {
 	}
 	defer video.Close()
 	defer fmt.Println("sss")
-	//io.Copy(c.Writer,video)
 	http.ServeContent(c.Writer, c.Request, "test.mp4", time.Now().In(constant.CstZone), video)
 }
 func Run(){

@@ -5,7 +5,6 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"awesomeProject/main/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -23,6 +22,7 @@ func ApplyTeacher(c *gin.Context){
 	apply.UserId = util.GetUser(c)
 	apply.UserName = dao.GetUserById(apply.UserId).UserName
 	apply.Type = constant.TEACHER_JOIN
+
 
 	dao.InsertApply(&apply)
 	c.JSON(http.StatusOK, gin.H{
@@ -183,8 +183,8 @@ func DealApply(c *gin.Context){
 		return
 	}
 	apply := dao.GetApplyById(json.ApplyId)
-	fmt.Println(apply)
-	if apply.Type == constant.TEACHER_JOIN{
+	user := dao.GetUserById(util.GetUser(c))
+	if user.UserType == constant.ADMIN && apply.Type == constant.TEACHER_JOIN{
 		if json.Reuslt == 1{
 			dao.UpdateUserType(apply.UserId)
 			var msg domain.Message
@@ -207,7 +207,7 @@ func DealApply(c *gin.Context){
 			"data": dao.GetApplysByType(constant.TEACHER_JOIN),
 		})
 		return
-	}else if apply.Type == constant.COURSE_JOIN{
+	}else if user.UserType == constant.TEACHER && apply.Type == constant.COURSE_JOIN{
 		if json.Reuslt == 1{
 
 			var scr domain.StudentCourseRelation
@@ -215,7 +215,9 @@ func DealApply(c *gin.Context){
 			scr.StudentId = apply.UserId
 			scr.Id = dao.GetIncrementId("studentcourserelation")
 			scr.Type = constant.STU
-			dao.AddOneSCRelation(&scr)
+			if dao.GetSCRById(scr.CourseId,scr.StudentId) == false {
+				dao.AddOneSCRelation(&scr)
+			}
 			var msg domain.Message
 			msg.Id=dao.GetIncrementId("message")
 			msg.Topic="审核成功"

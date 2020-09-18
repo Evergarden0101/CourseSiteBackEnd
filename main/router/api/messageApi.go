@@ -17,7 +17,6 @@ func SendMessage(c *gin.Context) {
 	}
 	msg.Id=dao.GetIncrementId("message")
 	msg.Time=time.Now().In(constant.CstZone)
-	msg.TimeString = msg.Time.Format("2006-01-02 15:04:05")
 	msg.FromId=util.GetUser(c)
 	msg.Read=false
 
