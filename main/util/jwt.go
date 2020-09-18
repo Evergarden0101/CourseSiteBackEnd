@@ -5,6 +5,7 @@ import (
 	"awesomeProject/main/dao"
 	"awesomeProject/main/domain"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -68,6 +69,7 @@ func TeacherCourseAuth(c *gin.Context,courseId string)bool{
 	user := dao.GetUserById(userId)
 	course := dao.GetCourse(courseId)
 	scr := dao.GetSCR(courseId,userId)
+	fmt.Println(*scr)
 	if user.Id != course.TeacherId && scr.Type != constant.ASS{
 		log.Println(user)
 		log.Println(course)

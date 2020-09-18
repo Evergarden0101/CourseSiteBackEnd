@@ -207,7 +207,7 @@ func DealApply(c *gin.Context){
 			"data": dao.GetApplysByType(constant.TEACHER_JOIN),
 		})
 		return
-	}else if user.UserType == constant.TEACHER && apply.Type == constant.COURSE_JOIN{
+	}else if apply.Type == constant.COURSE_JOIN{
 		if json.Reuslt == 1{
 
 			var scr domain.StudentCourseRelation
